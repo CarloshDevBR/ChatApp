@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primary_200">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/spacing_medium"
+        tools:context=".presentation.auth.signup.SignUpFragment">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/img_logo"
+            android:layout_width="@dimen/width_logo"
+            android:layout_height="@dimen/height_logo"
+            android:layout_gravity="center"
+            android:src="@drawable/logo_white"
+            app:layout_constraintBottom_toTopOf="@id/component_alert"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <include
+            android:id="@+id/component_alert"
+            layout="@layout/component_alert"
+            android:layout_width="@dimen/spacing_reset"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/spacing_high_s"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/input_email_layout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/img_logo" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_name_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/spacing_medium_h"
+            android:layout_marginTop="@dimen/spacing_small_m"
+            app:hintTextColor="@color/primary_500"
+            app:layout_constraintBottom_toTopOf="@id/input_email_layout"
+            app:layout_constraintTop_toBottomOf="@+id/component_alert">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/input_name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/input_hint_name"
+                android:inputType="text"
+                android:textColor="@color/secondary_500" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_email_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/spacing_medium_h"
+            android:layout_marginTop="@dimen/spacing_small"
+            app:hintTextColor="@color/primary_500"
+            app:layout_constraintBottom_toTopOf="@id/input_password_layout"
+            app:layout_constraintTop_toBottomOf="@+id/input_name_layout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/input_email"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/input_hint_email"
+                android:inputType="text"
+                android:textColor="@color/secondary_500" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_password_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/spacing_medium_h"
+            android:layout_marginTop="@dimen/spacing_small"
+            app:endIconDrawable="@drawable/ic_visibility"
+            app:endIconMode="custom"
+            app:hintTextColor="@color/primary_500"
+            app:layout_constraintBottom_toTopOf="@id/btn_sign_up"
+            app:layout_constraintTop_toBottomOf="@+id/input_email_layout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/input_password"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/input_hint_password"
+                android:inputType="textPassword"
+                android:textColor="@color/secondary_500" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.example.chatapp.presentation.components.chatbutton.ChatButton
+            android:id="@+id/btn_sign_up"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/spacing_medium_h"
+            android:layout_marginTop="@dimen/spacing_small_m"
+            app:label="@string/btn_txt_register"
+            app:layout_constraintBottom_toBottomOf="@id/txt_link"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/input_password_layout" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/txt_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_small_m"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/txt_sign_in_now"
+            android:textColor="@color/secondary_500"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_sign_up" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>

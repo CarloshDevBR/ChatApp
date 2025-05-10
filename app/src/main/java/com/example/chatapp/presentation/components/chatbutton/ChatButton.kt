@@ -16,12 +16,15 @@ class ChatButton @JvmOverloads constructor(
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
     private var binding = ComponentButtonBinding.inflate(
         LayoutInflater.from(context),
-        this
+        this,
+        true
     )
-
     private lateinit var label: String
-
-    var loading: Boolean = false
+    var isLoading: Boolean = false
+        set(value) {
+            field = value
+            setupComponent()
+        }
 
     init {
         attrs?.let {
@@ -38,26 +41,30 @@ class ChatButton @JvmOverloads constructor(
         val attributes = context.obtainStyledAttributes(attrs, R.styleable.Button)
 
         label = attributes.getString(R.styleable.Button_label) ?: ""
-
-        loading = attributes.getBoolean(R.styleable.Button_loading, false)
+        isLoading = attributes.getBoolean(R.styleable.Button_loading, false)
 
         attributes.recycle()
     }
 
     private fun setupComponent() = with(binding) {
         txtBtnChat.text = label
-        txtBtnChat.visibility = if (loading) View.INVISIBLE else View.VISIBLE
+        txtBtnChat.visibility = if (isLoading) View.INVISIBLE else View.VISIBLE
 
-        progressbarBtnChat.visibility = if (loading.not()) View.INVISIBLE else View.VISIBLE
+        progressbarBtnChat.visibility = if (isLoading.not()) View.INVISIBLE else View.VISIBLE
 
-        btnChat.background = if (loading) {
+        btnChat.background = if (isLoading) {
             ContextCompat.getDrawable(context, R.drawable.shape_rounded_background_filled_disabled)
         } else {
             ContextCompat.getDrawable(context, R.drawable.shape_rounded_background_filled)
         }
+
+        btnChat.isClickable = !isLoading
+        btnChat.isFocusable = !isLoading
     }
 
-    fun setChatButtonClickListener(listener: OnClickListener) = with(binding) {
-        btnChat.setOnClickListener(listener)
+    fun setOnClickListener(listener: () -> Unit) = with(binding) {
+        btnChat.setOnClickListener {
+            listener()
+        }
     }
 }

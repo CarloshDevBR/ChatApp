@@ -65,4 +65,7 @@ dependencies {
     // DI - Koin
     implementation(libs.koin.core)
     implementation(libs.koin.android)
+
+    // Gson
+    implementation(libs.gson)
 }

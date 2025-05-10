@@ -5,30 +5,43 @@ import com.example.chatapp.data.errors.AuthError
 import com.example.chatapp.domain.repository.FireStoreAuthRepository
 import com.example.chatapp.domain.repository.FirebaseAuthRepository
 import com.google.firebase.FirebaseException
-import com.google.firebase.auth.AuthResult
+import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.auth.UserProfileChangeRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
-import javax.inject.Inject
 
-class FirebaseAuthRepositoryImpl @Inject constructor(
+class FirebaseAuthRepositoryImpl(
     private val firebaseAuth: FirebaseAuth,
     private val fireStoreAuthRepository: FireStoreAuthRepository
 ) : FirebaseAuthRepository {
     override suspend fun signIn(
         email: String,
         password: String
-    ): Flow<AuthResult> = flow {
+    ): Flow<UserResponse> = flow {
         try {
             val result = firebaseAuth.signInWithEmailAndPassword(email, password).await()
+            val firebaseUser = result.user
 
-            emit(result)
+            if (firebaseUser != null) {
+                val userModel = UserResponse(
+                    id = firebaseUser.uid,
+                    name = firebaseUser.displayName ?: "",
+                    email = firebaseUser.email ?: "",
+                    password = password,
+                    image = ""
+                )
+
+                emit(userModel)
+            } else {
+                throw AuthError.UserNotFound
+            }
         } catch (e: FirebaseException) {
             throw handlerError(e)
         }
@@ -40,8 +53,8 @@ class FirebaseAuthRepositoryImpl @Inject constructor(
         password: String
     ): Flow<UserResponse> = flow {
         try {
-            val authResult = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
-            val firebaseUser = authResult.user
+            val result = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
+            val firebaseUser = result.user
 
             if (firebaseUser != null) {
                 val profileUpdates = UserProfileChangeRequest.Builder()
@@ -67,7 +80,7 @@ class FirebaseAuthRepositoryImpl @Inject constructor(
                     }
             }
         } catch (e: FirebaseException) {
-            throw e
+            throw handlerError(e)
         }
     }
 
@@ -84,6 +97,10 @@ class FirebaseAuthRepositoryImpl @Inject constructor(
     private fun handlerError(exception: FirebaseException): AuthError = when (exception) {
         is FirebaseAuthInvalidUserException -> AuthError.UserNotFound
         is FirebaseAuthInvalidCredentialsException -> AuthError.InvalidCredentials
+        is FirebaseAuthWeakPasswordException -> AuthError.WeakPassword
+        is FirebaseAuthInvalidCredentialsException -> AuthError.InvalidEmail
+        is FirebaseAuthUserCollisionException -> AuthError.EmailAlreadyInUse
+        is FirebaseNetworkException -> AuthError.NetworkError
         else -> AuthError.UnknownError
     }
 }

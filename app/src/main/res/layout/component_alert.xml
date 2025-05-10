@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/container_alert"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_rounded_background_alert"
+    android:padding="@dimen/spacing_small_m">
+
+    <ImageView
+        android:layout_width="@dimen/spacing_medium"
+        android:layout_height="@dimen/spacing_medium"
+        android:layout_marginRight="@dimen/spacing_small"
+        android:src="@drawable/ic_warning"
+        app:tint="@color/error_400" />
+
+    <TextView
+        android:id="@+id/text_alert"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/spacing_small_m"
+        android:layout_gravity="center"
+        android:lineHeight="@dimen/typography_high"
+        android:text="E-mail ou senha inválidos"
+        android:textColor="@color/error_400" />
+
+</LinearLayout>

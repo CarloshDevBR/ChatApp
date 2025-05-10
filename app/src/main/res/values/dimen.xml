@@ -1,28 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    // Forms
+    <!-- Spacing -->
     <dimen name="spacing_reset">0dp</dimen>
     <dimen name="spacing_nano">4dp</dimen>
+    <dimen name="spacing_small">8dp</dimen>
     <dimen name="spacing_small_s">12dp</dimen>
     <dimen name="spacing_small_m">16dp</dimen>
-    <dimen name="spacing_small">24dp</dimen>
-    <dimen name="spacing_medium_s">34dp</dimen>
-    <dimen name="spacing_medium">48dp</dimen>
+    <dimen name="spacing_medium_s">20dp</dimen>
+    <dimen name="spacing_medium">24dp</dimen>
+    <dimen name="spacing_medium_h">28dp</dimen>
+    <dimen name="spacing_high_s">32dp</dimen>
+    <dimen name="spacing_high">36dp</dimen>
+    <dimen name="spacing_high_h">40dp</dimen>
+    <dimen name="spacing_extra_high">44dp</dimen>
+    <dimen name="spacing_extra_high_m">50dp</dimen>
+    <dimen name="spacing_extra_high_h">54dp</dimen>
 
-    // Logo
+    <!-- Typography -->
+    <dimen name="typography_small">12sp</dimen>
+    <dimen name="typography_medium">14sp</dimen>
+    <dimen name="typography_high">20sp</dimen>
+
+    <!-- Logo -->
     <dimen name="width_logo">250dp</dimen>
     <dimen name="height_logo">250dp</dimen>
 
-    // TextField
-    <dimen name="width_textfield">0dp</dimen>
-    <dimen name="height_textfield">56dp</dimen>
-
-    // Toolbar
-    <dimen name="height_toolbar">50dp</dimen>
-
-    // ProgressBar
-    <dimen name="size_progress_bar">32dp</dimen>
-
-    // Text
-    <dimen name="text_regular">16sp</dimen>
+    <!-- Inputs -->
+    <dimen name="height_textfield">48dp</dimen>
 </resources>
