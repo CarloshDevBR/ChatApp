@@ -7,14 +7,14 @@
     android:background="@drawable/shape_rounded_background_alert"
     android:padding="@dimen/spacing_small_m">
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:layout_width="@dimen/spacing_medium"
         android:layout_height="@dimen/spacing_medium"
         android:layout_marginRight="@dimen/spacing_small"
         android:src="@drawable/ic_warning"
         app:tint="@color/error_400" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text_alert"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/spacing_small_m"

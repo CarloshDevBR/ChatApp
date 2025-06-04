@@ -64,15 +64,8 @@ class SignInFragment : Fragment() {
                     inputEmail.error = getText(R.string.txt_empty_email)
                 }
 
-                SignInState.InvalidPassword -> {
-                    inputPasswordLayout.endIconMode = TextInputLayout.END_ICON_NONE
-                    inputPassword.error = getText(R.string.txt_invalid_password)
-                }
-
-                SignInState.EmptyPassword -> {
-                    inputEmail.error = getText(R.string.txt_empty_password)
-                    inputPasswordLayout.endIconMode = TextInputLayout.END_ICON_NONE
-                }
+                SignInState.InvalidPassword -> invalidPassword()
+                SignInState.EmptyPassword -> emptyPassword()
 
                 is SignInState.SignInError -> {
                     clearState()
@@ -133,8 +126,26 @@ class SignInFragment : Fragment() {
         inputPassword.setSelection(inputPassword.text?.length ?: 0)
     }
 
+    private fun invalidPassword() = with(binding) {
+        inputPasswordLayout.endIconMode = TextInputLayout.END_ICON_NONE
+        inputPassword.error = getText(R.string.txt_invalid_password)
+    }
+
+    private fun emptyPassword() = with(binding) {
+        inputPasswordLayout.endIconMode = TextInputLayout.END_ICON_NONE
+        inputEmail.error = getText(R.string.txt_empty_password)
+    }
+
     private fun setLoadingButton(value: Boolean) = with(binding) {
         btnSignIn.isLoading = value
+    }
+
+    private fun setAlertView(
+        visibility: Boolean,
+        message: String = ""
+    ) = with(binding) {
+        componentAlert.containerAlert.visibility = if (visibility) View.VISIBLE else View.GONE
+        componentAlert.textAlert.text = message
     }
 
     private fun navigateToHome() {
@@ -145,14 +156,6 @@ class SignInFragment : Fragment() {
     private fun navigateToSignUp() {
         val action = navigation.getSignUpFragment()
         findNavController().navigate(action)
-    }
-
-    private fun setAlertView(
-        visibility: Boolean,
-        message: String = ""
-    ) = with(binding) {
-        componentAlert.containerAlert.visibility = if (visibility) View.VISIBLE else View.GONE
-        componentAlert.textAlert.text = message
     }
 
     private fun clearState() {

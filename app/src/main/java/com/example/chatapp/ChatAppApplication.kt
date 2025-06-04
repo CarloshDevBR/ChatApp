@@ -14,9 +14,9 @@ class ChatAppApplication : Application() {
 
     private fun start() {
         startKoin {
-            androidContext(this@ChatAppApplication)
-            ApplicationModules().load()
             androidLogger()
+            androidContext(this@ChatAppApplication)
+            modules(ApplicationModules().load())
         }
     }
 }

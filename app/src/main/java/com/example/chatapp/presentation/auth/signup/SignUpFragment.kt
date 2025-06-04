@@ -148,6 +148,14 @@ class SignUpFragment : Fragment() {
         )
     }
 
+    private fun setAlertView(
+        visibility: Boolean,
+        message: String = ""
+    ) = with(binding) {
+        componentAlert.containerAlert.visibility = if (visibility) View.VISIBLE else View.GONE
+        componentAlert.textAlert.text = message
+    }
+
     private fun navigateToHome() {
         val action = navigation.getHome()
         findNavController().navigate(action)
@@ -156,14 +164,6 @@ class SignUpFragment : Fragment() {
     private fun navigateToSignIn() {
         val action = navigation.getSignInFragment()
         findNavController().navigate(action)
-    }
-
-    private fun setAlertView(
-        visibility: Boolean,
-        message: String = ""
-    ) = with(binding) {
-        componentAlert.containerAlert.visibility = if (visibility) View.VISIBLE else View.GONE
-        componentAlert.textAlert.text = message
     }
 
     private fun clearState() {

@@ -38,22 +38,16 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 class ApplicationModules {
-    fun load() {
-        loadKoinModules(
-            module {
-                factoryAndroid()
-                factoryAuth()
-                factoryDataSource()
-                factoryViewModel()
-                factoryBusiness()
-                factoryNavigation()
-            }
-        )
-    }
-
-    private fun Module.factoryAndroid() {
-        single { androidContext() }
-    }
+    fun load() = listOf(
+        module {
+            factoryAuth()
+            factoryDataSource()
+            factoryViewModel()
+            factoryBusiness()
+            factoryUseCase()
+            factoryNavigation()
+        }
+    )
 
     private fun Module.factoryAuth() {
         single { FirebaseAuth.getInstance() }
@@ -76,36 +70,6 @@ class ApplicationModules {
         single<FireStoreAuthRepository> {
             FireStoreAuthRepositoryImpl(
                 firestore = get()
-            )
-        }
-
-        single<GetUserUseCase> {
-            GetUserUseCaseImpl(
-                repository = get()
-            )
-        }
-
-        single<SaveUserUseCase> {
-            SaveUserUseCaseImpl(
-                repository = get()
-            )
-        }
-
-        factory<SignInUseCase> {
-            SignInUseCaseImpl(
-                repository = get()
-            )
-        }
-
-        factory<SignUpUseCase> {
-            SignUpUseCaseImpl(
-                firebaseRepository = get(),
-            )
-        }
-
-        factory<SignOutUseCase> {
-            SignOutUseCaseImpl(
-                repository = get()
             )
         }
     }
@@ -147,6 +111,38 @@ class ApplicationModules {
         }
         factory<SignUpBusiness> {
             SignUpBusinessImpl()
+        }
+    }
+
+    private fun Module.factoryUseCase() {
+        single<GetUserUseCase> {
+            GetUserUseCaseImpl(
+                repository = get()
+            )
+        }
+
+        single<SaveUserUseCase> {
+            SaveUserUseCaseImpl(
+                repository = get()
+            )
+        }
+
+        factory<SignInUseCase> {
+            SignInUseCaseImpl(
+                repository = get()
+            )
+        }
+
+        factory<SignUpUseCase> {
+            SignUpUseCaseImpl(
+                firebaseRepository = get(),
+            )
+        }
+
+        factory<SignOutUseCase> {
+            SignOutUseCaseImpl(
+                repository = get()
+            )
         }
     }
 
