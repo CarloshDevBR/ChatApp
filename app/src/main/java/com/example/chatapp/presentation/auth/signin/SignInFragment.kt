@@ -1,35 +1,24 @@
 package com.example.chatapp.presentation.auth.signin
 
-import android.os.Bundle
 import android.text.InputType
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.example.chatapp.R
 import com.example.chatapp.databinding.FragmentSignInBinding
-import com.example.chatapp.navigation.SignInNavigation
+import com.example.chatapp.navigation.ChatNavigation
+import com.example.chatapp.presentation.BaseFragment
 import com.google.android.material.textfield.TextInputLayout
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SignInFragment : Fragment() {
-    private val binding by lazy {
-        FragmentSignInBinding.inflate(layoutInflater)
-    }
+class SignInFragment : BaseFragment<FragmentSignInBinding>() {
     private val viewModel: SignInViewModel by viewModel()
-    private val navigation by inject<SignInNavigation>()
+    private val navigation by inject<ChatNavigation>()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View = binding.root
+    override fun inflate(): FragmentSignInBinding = FragmentSignInBinding.inflate(layoutInflater)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun setupViews() {
+        super.setupViews()
         setupListeners()
         setupObservers()
     }
@@ -49,24 +38,23 @@ class SignInFragment : Fragment() {
     private fun setupObservers() = with(binding) {
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when (state) {
-                SignInState.InitialState -> {}
-                SignInState.Logged -> {
+                is SignInState.InitialState -> {}
+                is SignInState.Logged -> {
                     clearState()
                     navigateToHome()
                 }
 
-                SignInState.Loading -> setLoadingButton(true)
-                SignInState.InvalidEmail -> {
+                is SignInState.Loading -> setLoadingButton(true)
+                is SignInState.InvalidEmail -> {
                     inputEmail.error = getText(R.string.txt_invalid_email)
                 }
 
-                SignInState.EmptyEmail -> {
+                is SignInState.EmptyEmail -> {
                     inputEmail.error = getText(R.string.txt_empty_email)
                 }
 
-                SignInState.InvalidPassword -> invalidPassword()
-                SignInState.EmptyPassword -> emptyPassword()
-
+                is SignInState.InvalidPassword -> invalidPassword()
+                is SignInState.EmptyPassword -> emptyPassword()
                 is SignInState.SignInError -> {
                     clearState()
 
@@ -76,7 +64,7 @@ class SignInFragment : Fragment() {
                     )
                 }
 
-                SignInState.IsValidForm -> {
+                is SignInState.IsValidForm -> {
                     clearState()
 
                     inputPasswordLayout.endIconMode = TextInputLayout.END_ICON_CUSTOM
@@ -148,15 +136,9 @@ class SignInFragment : Fragment() {
         componentAlert.textAlert.text = message
     }
 
-    private fun navigateToHome() {
-        val action = navigation.getHomeFragment()
-        findNavController().navigate(action)
-    }
+    private fun navigateToHome() = navigate(navigation.getHomeFromSignInFragment())
 
-    private fun navigateToSignUp() {
-        val action = navigation.getSignUpFragment()
-        findNavController().navigate(action)
-    }
+    private fun navigateToSignUp() = navigate(navigation.getSignUpFromSignInFragment())
 
     private fun clearState() {
         setLoadingButton(false)

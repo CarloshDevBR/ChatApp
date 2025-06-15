@@ -1,35 +1,24 @@
 package com.example.chatapp.presentation.auth.signup
 
-import android.os.Bundle
 import android.text.InputType
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.example.chatapp.R
 import com.example.chatapp.databinding.FragmentSignUpBinding
-import com.example.chatapp.navigation.SignUpNavigation
+import com.example.chatapp.navigation.ChatNavigation
+import com.example.chatapp.presentation.BaseFragment
 import com.google.android.material.textfield.TextInputLayout
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SignUpFragment : Fragment() {
-    private val binding by lazy {
-        FragmentSignUpBinding.inflate(layoutInflater)
-    }
+class SignUpFragment : BaseFragment<FragmentSignUpBinding>() {
     private val viewModel: SignUpViewModel by viewModel()
-    private val navigation by inject<SignUpNavigation>()
+    private val navigation by inject<ChatNavigation>()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View = binding.root
+    override fun inflate(): FragmentSignUpBinding = FragmentSignUpBinding.inflate(layoutInflater)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun setupViews() {
+        super.setupViews()
         setupListeners()
         setupObservers()
     }
@@ -49,28 +38,27 @@ class SignUpFragment : Fragment() {
     private fun setupObservers() = with(binding) {
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when (state) {
-                SignUpState.InitialState -> {}
-                SignUpState.Subscribed -> {
+                is SignUpState.InitialState -> {}
+                is SignUpState.Subscribed -> {
                     clearState()
                     navigateToHome()
                 }
 
-                SignUpState.Loading -> setLoadingButton(true)
-                SignUpState.InvalidName -> {
+                is SignUpState.Loading -> setLoadingButton(true)
+                is SignUpState.InvalidName -> {
                     inputName.error = getText(R.string.txt_empty)
                 }
 
-                SignUpState.InvalidEmail -> {
+                is SignUpState.InvalidEmail -> {
                     inputEmail.error = getText(R.string.txt_invalid_email)
                 }
 
-                SignUpState.EmptyEmail -> {
+                is SignUpState.EmptyEmail -> {
                     inputEmail.error = getText(R.string.txt_invalid_email)
                 }
 
-                SignUpState.InvalidPassword -> invalidPassword()
-                SignUpState.EmptyPassword -> emptyPassword()
-
+                is SignUpState.InvalidPassword -> invalidPassword()
+                is SignUpState.EmptyPassword -> emptyPassword()
                 is SignUpState.SignUpError -> {
                     clearState()
 
@@ -80,7 +68,7 @@ class SignUpFragment : Fragment() {
                     )
                 }
 
-                SignUpState.IsValidForm -> {
+                is SignUpState.IsValidForm -> {
                     clearState()
 
                     inputPasswordLayout.endIconMode = TextInputLayout.END_ICON_CUSTOM
@@ -156,15 +144,9 @@ class SignUpFragment : Fragment() {
         componentAlert.textAlert.text = message
     }
 
-    private fun navigateToHome() {
-        val action = navigation.getHome()
-        findNavController().navigate(action)
-    }
+    private fun navigateToHome() = navigate(navigation.getHomeFromSignUpFragment())
 
-    private fun navigateToSignIn() {
-        val action = navigation.getSignInFragment()
-        findNavController().navigate(action)
-    }
+    private fun navigateToSignIn() = navigate(navigation.getSignInFromSignUpFragment())
 
     private fun clearState() {
         setLoadingButton(false)

@@ -1,5 +1,6 @@
 package com.example.chatapp.di
 
+import com.example.chatapp.MainViewModel
 import com.example.chatapp.data.datasource.SharedPreferencesDataSourceImpl
 import com.example.chatapp.data.repository.FireStoreAuthRepositoryImpl
 import com.example.chatapp.data.repository.FirebaseAuthRepositoryImpl
@@ -22,17 +23,13 @@ import com.example.chatapp.domain.usecase.user.GetUserUseCase
 import com.example.chatapp.domain.usecase.user.GetUserUseCaseImpl
 import com.example.chatapp.domain.usecase.user.SaveUserUseCase
 import com.example.chatapp.domain.usecase.user.SaveUserUseCaseImpl
-import com.example.chatapp.navigation.SignInNavigation
-import com.example.chatapp.navigation.SignInNavigationImpl
-import com.example.chatapp.navigation.SignUpNavigation
-import com.example.chatapp.navigation.SignUpNavigationImpl
+import com.example.chatapp.navigation.ChatNavigation
+import com.example.chatapp.navigation.ChatNavigationImpl
 import com.example.chatapp.presentation.auth.signin.SignInViewModel
 import com.example.chatapp.presentation.auth.signup.SignUpViewModel
 import com.example.chatapp.presentation.home.HomeViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import org.koin.android.ext.koin.androidContext
-import org.koin.core.context.loadKoinModules
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -51,22 +48,18 @@ class ApplicationModules {
 
     private fun Module.factoryAuth() {
         single { FirebaseAuth.getInstance() }
-
         single { FirebaseFirestore.getInstance() }
-
         single<UserPreferencesRepository> {
             UserPreferencesRepositoryImpl(
                 dataSource = get()
             )
         }
-
         single<FirebaseAuthRepository> {
             FirebaseAuthRepositoryImpl(
                 firebaseAuth = get(),
                 fireStoreAuthRepository = get()
             )
         }
-
         single<FireStoreAuthRepository> {
             FireStoreAuthRepositoryImpl(
                 firestore = get()
@@ -84,12 +77,17 @@ class ApplicationModules {
 
     private fun Module.factoryViewModel() {
         viewModel {
+            MainViewModel(
+                getUserUseCase = get()
+            )
+        }
+        viewModel {
             SignUpViewModel(
                 signUpUseCase = get(),
+                saveUserUseCase = get(),
                 signUpBusiness = get()
             )
         }
-
         viewModel {
             SignInViewModel(
                 signInUseCase = get(),
@@ -97,7 +95,6 @@ class ApplicationModules {
                 signInBusiness = get()
             )
         }
-
         viewModel {
             HomeViewModel(
                 getUserUseCase = get()
@@ -120,25 +117,21 @@ class ApplicationModules {
                 repository = get()
             )
         }
-
         single<SaveUserUseCase> {
             SaveUserUseCaseImpl(
                 repository = get()
             )
         }
-
         factory<SignInUseCase> {
             SignInUseCaseImpl(
                 repository = get()
             )
         }
-
         factory<SignUpUseCase> {
             SignUpUseCaseImpl(
                 firebaseRepository = get(),
             )
         }
-
         factory<SignOutUseCase> {
             SignOutUseCaseImpl(
                 repository = get()
@@ -147,12 +140,8 @@ class ApplicationModules {
     }
 
     private fun Module.factoryNavigation() {
-        factory<SignInNavigation> {
-            SignInNavigationImpl()
-        }
-
-        factory<SignUpNavigation> {
-            SignUpNavigationImpl()
+        factory<ChatNavigation> {
+            ChatNavigationImpl()
         }
     }
 }

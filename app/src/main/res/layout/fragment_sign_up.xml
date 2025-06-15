@@ -17,7 +17,6 @@
             android:id="@+id/img_logo"
             android:layout_width="@dimen/width_logo"
             android:layout_height="@dimen/height_logo"
-            android:layout_gravity="center"
             android:src="@drawable/logo_white"
             app:layout_constraintBottom_toTopOf="@id/component_alert"
             app:layout_constraintEnd_toEndOf="parent"

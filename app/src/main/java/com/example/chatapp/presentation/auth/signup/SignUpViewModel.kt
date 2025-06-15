@@ -4,9 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.chatapp.core.domain.response.UserResponse
 import com.example.chatapp.data.errors.AuthError
 import com.example.chatapp.domain.business.SignUpBusiness
 import com.example.chatapp.domain.usecase.auth.SignUpUseCase
+import com.example.chatapp.domain.usecase.user.SaveUserUseCase
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
@@ -14,6 +16,7 @@ import com.example.chatapp.presentation.auth.signup.SignUpState as State
 
 class SignUpViewModel(
     private val signUpUseCase: SignUpUseCase,
+    private val saveUserUseCase: SaveUserUseCase,
     private val signUpBusiness: SignUpBusiness
 ) : ViewModel() {
     private val _state = MutableLiveData<State>()
@@ -21,10 +24,6 @@ class SignUpViewModel(
 
     private val _isPasswordVisible = MutableLiveData(false)
     val isPasswordVisible: LiveData<Boolean> get() = _isPasswordVisible
-
-    fun validateForm(name: String, email: String, password: String) {
-        _state.value = signUpBusiness.isValidateForm(name, email, password)
-    }
 
     fun signUp(name: String, email: String, password: String) {
         viewModelScope.launch {
@@ -39,6 +38,16 @@ class SignUpViewModel(
             }.catch {
                 handlerError(it as AuthError)
             }.collect {
+                saveUser(it)
+            }
+        }
+    }
+
+    private fun saveUser(user: UserResponse) {
+        viewModelScope.launch {
+            saveUserUseCase.invoke(
+                params = SaveUserUseCase.Params(user)
+            ).collect {
                 _state.value = State.Subscribed
             }
         }
@@ -54,6 +63,10 @@ class SignUpViewModel(
                 else -> "$UNKNOWN_ERROR ${error.message}"
             }
         )
+    }
+
+    fun validateForm(name: String, email: String, password: String) {
+        _state.value = signUpBusiness.isValidateForm(name, email, password)
     }
 
     fun togglePasswordVisibility() {

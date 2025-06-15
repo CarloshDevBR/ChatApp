@@ -5,28 +5,36 @@ import android.content.SharedPreferences
 import com.example.chatapp.core.domain.response.UserResponse
 import com.example.chatapp.domain.datasource.SharedPreferencesDataSource
 import com.google.gson.Gson
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
-class SharedPreferencesDataSourceImpl(context: Context) : SharedPreferencesDataSource {
-    private val security: SharedPreferences = context.getSharedPreferences(
-        SHARED_NAME,
-        Context.MODE_PRIVATE
+class SharedPreferencesDataSourceImpl(
+    context: Context
+) : SharedPreferencesDataSource {
+    private val security: SharedPreferences = context.applicationContext.getSharedPreferences(
+        SHARED_NAME, Context.MODE_PRIVATE
     )
 
     private val gson = Gson()
 
-    override fun save(key: String, value: UserResponse): Boolean {
+    override fun save(key: String, value: UserResponse): Flow<Boolean> = flow {
         val json = gson.toJson(value)
-        return security.edit().putString(key, json).commit()
+        val result = security.edit().putString(key, json).commit()
+        emit(result)
     }
 
-    override fun get(key: String): UserResponse {
+    override fun get(key: String): Flow<UserResponse> = flow {
         val json = security.getString(key, null)
-        return json.let {
+        val user = json?.let {
             gson.fromJson(it, UserResponse::class.java)
         } ?: UserResponse()
+        emit(user)
     }
 
-    override fun remove(key: String): Boolean = security.edit().remove(key).commit()
+    override fun remove(key: String): Flow<Boolean> = flow {
+        val result = security.edit().remove(key).commit()
+        emit(result)
+    }
 
     private companion object {
         const val SHARED_NAME = "chat_user"

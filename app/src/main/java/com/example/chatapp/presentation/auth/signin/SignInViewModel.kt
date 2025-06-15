@@ -25,10 +25,6 @@ class SignInViewModel(
     private val _isPasswordVisible = MutableLiveData(false)
     val isPasswordVisible: LiveData<Boolean> get() = _isPasswordVisible
 
-    fun validateForm(email: String, password: String) {
-        _state.value = signInBusiness.isValidForm(email, password)
-    }
-
     fun signIn(email: String, password: String) {
         viewModelScope.launch {
             signInUseCase.invoke(
@@ -41,7 +37,6 @@ class SignInViewModel(
             }.catch {
                 handlerError(it as AuthError)
             }.collect {
-                _state.value = State.Logged
                 saveUser(it)
             }
         }
@@ -51,7 +46,9 @@ class SignInViewModel(
         viewModelScope.launch {
             saveUserUseCase.invoke(
                 params = SaveUserUseCase.Params(user)
-            )
+            ).collect {
+                _state.value = State.Logged
+            }
         }
     }
 
@@ -63,6 +60,10 @@ class SignInViewModel(
                 else -> "$UNKNOWN_ERROR ${error.message}"
             }
         )
+    }
+
+    fun validateForm(email: String, password: String) {
+        _state.value = signInBusiness.isValidForm(email, password)
     }
 
     fun togglePasswordVisibility() {
