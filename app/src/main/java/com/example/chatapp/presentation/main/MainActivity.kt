@@ -1,13 +1,13 @@
-package com.example.chatapp
+package com.example.chatapp.presentation.main
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
+import com.example.chatapp.R
 import com.example.chatapp.databinding.ActivityMainBinding
-import com.example.chatapp.navigation.ChatNavigation
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
@@ -15,7 +15,6 @@ class MainActivity : AppCompatActivity() {
         ActivityMainBinding.inflate(layoutInflater)
     }
     private val viewModel: MainViewModel by viewModel()
-    private val navigation by inject<ChatNavigation>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +44,9 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fcv_nav_host_container) as NavHostFragment
         val navController = navHostFragment.navController
-        navController.navigate(navigation.getHomeFromSignInFragment())
+        val navOptions = NavOptions.Builder()
+            .setPopUpTo(R.id.sign_in_fragment, true)
+            .build()
+        navController.navigate(R.id.home_fragment, null, navOptions)
     }
 }

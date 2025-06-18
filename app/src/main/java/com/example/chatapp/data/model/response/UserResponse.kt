@@ -1,4 +1,4 @@
-package com.example.chatapp.core.domain.response
+package com.example.chatapp.data.model.response
 
 data class UserResponse(
     val id: String = "",

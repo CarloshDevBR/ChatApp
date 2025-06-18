@@ -1,6 +1,6 @@
 package com.example.chatapp.data.repository
 
-import com.example.chatapp.core.domain.response.UserResponse
+import com.example.chatapp.data.model.response.UserResponse
 import com.example.chatapp.domain.repository.FireStoreAuthRepository
 import com.google.firebase.FirebaseException
 import com.google.firebase.firestore.FirebaseFirestore

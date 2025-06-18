@@ -1,7 +1,7 @@
 package com.example.chatapp.data.repository
 
-import com.example.chatapp.core.domain.response.UserResponse
-import com.example.chatapp.data.errors.AuthError
+import com.example.chatapp.data.model.response.UserResponse
+import com.example.chatapp.domain.errors.AuthError
 import com.example.chatapp.domain.repository.FireStoreAuthRepository
 import com.example.chatapp.domain.repository.FirebaseAuthRepository
 import com.google.firebase.FirebaseException
@@ -95,10 +95,9 @@ class FirebaseAuthRepositoryImpl(
     }
 
     private fun handlerError(exception: FirebaseException): AuthError = when (exception) {
+        is FirebaseAuthWeakPasswordException -> AuthError.WeakPassword
         is FirebaseAuthInvalidUserException -> AuthError.UserNotFound
         is FirebaseAuthInvalidCredentialsException -> AuthError.InvalidCredentials
-        is FirebaseAuthWeakPasswordException -> AuthError.WeakPassword
-        is FirebaseAuthInvalidCredentialsException -> AuthError.InvalidEmail
         is FirebaseAuthUserCollisionException -> AuthError.EmailAlreadyInUse
         is FirebaseNetworkException -> AuthError.NetworkError
         else -> AuthError.UnknownError

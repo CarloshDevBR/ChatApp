@@ -1,6 +1,11 @@
-package com.example.chatapp.di
+package com.example.chatapp.core.di
 
-import com.example.chatapp.MainViewModel
+import com.example.chatapp.presentation.main.MainViewModel
+import com.example.chatapp.core.navigation.ChatNavigation
+import com.example.chatapp.core.navigation.ChatNavigationImpl
+import com.example.chatapp.core.resourceprovider.ResourceProvider
+import com.example.chatapp.core.resourceprovider.ResourceProviderImpl
+import com.example.chatapp.data.datasource.SharedPreferencesDataSource
 import com.example.chatapp.data.datasource.SharedPreferencesDataSourceImpl
 import com.example.chatapp.data.repository.FireStoreAuthRepositoryImpl
 import com.example.chatapp.data.repository.FirebaseAuthRepositoryImpl
@@ -9,7 +14,6 @@ import com.example.chatapp.domain.business.SignInBusiness
 import com.example.chatapp.domain.business.SignInBusinessImpl
 import com.example.chatapp.domain.business.SignUpBusiness
 import com.example.chatapp.domain.business.SignUpBusinessImpl
-import com.example.chatapp.domain.datasource.SharedPreferencesDataSource
 import com.example.chatapp.domain.repository.FireStoreAuthRepository
 import com.example.chatapp.domain.repository.FirebaseAuthRepository
 import com.example.chatapp.domain.repository.UserPreferencesRepository
@@ -23,8 +27,6 @@ import com.example.chatapp.domain.usecase.user.GetUserUseCase
 import com.example.chatapp.domain.usecase.user.GetUserUseCaseImpl
 import com.example.chatapp.domain.usecase.user.SaveUserUseCase
 import com.example.chatapp.domain.usecase.user.SaveUserUseCaseImpl
-import com.example.chatapp.navigation.ChatNavigation
-import com.example.chatapp.navigation.ChatNavigationImpl
 import com.example.chatapp.presentation.auth.signin.SignInViewModel
 import com.example.chatapp.presentation.auth.signup.SignUpViewModel
 import com.example.chatapp.presentation.home.HomeViewModel
@@ -37,6 +39,7 @@ import org.koin.dsl.module
 class ApplicationModules {
     fun load() = listOf(
         module {
+            factoryInfra()
             factoryAuth()
             factoryDataSource()
             factoryViewModel()
@@ -45,6 +48,14 @@ class ApplicationModules {
             factoryNavigation()
         }
     )
+
+    private fun Module.factoryInfra() {
+        factory<ResourceProvider> {
+            ResourceProviderImpl(
+                context = get()
+            )
+        }
+    }
 
     private fun Module.factoryAuth() {
         single { FirebaseAuth.getInstance() }
@@ -97,6 +108,7 @@ class ApplicationModules {
         }
         viewModel {
             HomeViewModel(
+                resourceProvider = get(),
                 getUserUseCase = get()
             )
         }

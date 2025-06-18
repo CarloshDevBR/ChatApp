@@ -3,7 +3,7 @@ package com.example.chatapp.presentation.splash
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.chatapp.MainActivity
+import com.example.chatapp.presentation.main.MainActivity
 import com.example.chatapp.databinding.ActivitySplashBinding
 
 class SplashActivity : AppCompatActivity() {

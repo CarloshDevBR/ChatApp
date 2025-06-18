@@ -1,4 +1,4 @@
-package com.example.chatapp.navigation
+package com.example.chatapp.core.navigation
 
 import androidx.navigation.NavDirections
 import com.example.chatapp.presentation.auth.signin.SignInFragmentDirections

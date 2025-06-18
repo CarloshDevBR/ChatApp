@@ -1,6 +1,6 @@
 <resources>
     // App Name
-    <string name="app_name">ChatApp</string>
+    <string name="app_name">TalkApp</string>
 
     // Auth Screens
     <string name="img_description_logo">Logo AppChat\n</string>
@@ -16,4 +16,5 @@
     <string name="txt_empty_password">O campo é obrigatório</string>
     <string name="btn_txt_login">Entrar</string>
     <string name="btn_txt_register">Cadastrar</string>
+    <string name="txt_title_toolbar">Hello %1$s</string>
 </resources>

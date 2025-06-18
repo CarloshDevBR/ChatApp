@@ -1,4 +1,4 @@
-package com.example.chatapp
+package com.example.chatapp.presentation.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

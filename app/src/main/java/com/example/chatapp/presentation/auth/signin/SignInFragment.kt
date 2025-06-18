@@ -5,8 +5,8 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import com.example.chatapp.R
 import com.example.chatapp.databinding.FragmentSignInBinding
-import com.example.chatapp.navigation.ChatNavigation
-import com.example.chatapp.presentation.BaseFragment
+import com.example.chatapp.core.navigation.ChatNavigation
+import com.example.chatapp.core.base.BaseFragment
 import com.google.android.material.textfield.TextInputLayout
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -43,16 +43,13 @@ class SignInFragment : BaseFragment<FragmentSignInBinding>() {
                     clearState()
                     navigateToHome()
                 }
-
                 is SignInState.Loading -> setLoadingButton(true)
                 is SignInState.InvalidEmail -> {
                     inputEmail.error = getText(R.string.txt_invalid_email)
                 }
-
                 is SignInState.EmptyEmail -> {
                     inputEmail.error = getText(R.string.txt_empty_email)
                 }
-
                 is SignInState.InvalidPassword -> invalidPassword()
                 is SignInState.EmptyPassword -> emptyPassword()
                 is SignInState.SignInError -> {
@@ -63,7 +60,6 @@ class SignInFragment : BaseFragment<FragmentSignInBinding>() {
                         message = state.error
                     )
                 }
-
                 is SignInState.IsValidForm -> {
                     clearState()
 

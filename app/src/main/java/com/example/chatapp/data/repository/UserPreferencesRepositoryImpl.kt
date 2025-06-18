@@ -1,7 +1,7 @@
 package com.example.chatapp.data.repository
 
-import com.example.chatapp.core.domain.response.UserResponse
-import com.example.chatapp.domain.datasource.SharedPreferencesDataSource
+import com.example.chatapp.data.model.response.UserResponse
+import com.example.chatapp.data.datasource.SharedPreferencesDataSource
 import com.example.chatapp.domain.repository.UserPreferencesRepository
 import kotlinx.coroutines.flow.Flow
 

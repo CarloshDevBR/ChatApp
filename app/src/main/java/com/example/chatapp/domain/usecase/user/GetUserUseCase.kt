@@ -1,6 +1,6 @@
 package com.example.chatapp.domain.usecase.user
 
-import com.example.chatapp.core.domain.response.UserResponse
+import com.example.chatapp.data.model.response.UserResponse
 import com.example.chatapp.domain.repository.UserPreferencesRepository
 import kotlinx.coroutines.flow.Flow
 

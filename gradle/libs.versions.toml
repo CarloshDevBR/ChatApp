@@ -16,6 +16,7 @@ firebaseStorage = "21.0.1"
 navigation = "2.8.5"
 koinVersion = "4.0.1"
 gsonVersion = "2.10.1"
+swipereVersion = "1.1.0"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -32,6 +33,7 @@ androidx-activity = { group = "androidx.activity", name = "activity", version.re
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+swipere = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swipereVersion" }
 
 #firebase
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }

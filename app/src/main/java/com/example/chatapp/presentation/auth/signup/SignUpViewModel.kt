@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.chatapp.core.domain.response.UserResponse
-import com.example.chatapp.data.errors.AuthError
+import com.example.chatapp.data.model.response.UserResponse
+import com.example.chatapp.domain.errors.AuthError
 import com.example.chatapp.domain.business.SignUpBusiness
 import com.example.chatapp.domain.usecase.auth.SignUpUseCase
 import com.example.chatapp.domain.usecase.user.SaveUserUseCase
