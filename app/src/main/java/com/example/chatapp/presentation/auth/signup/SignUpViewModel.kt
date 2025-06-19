@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chatapp.data.model.response.UserResponse
-import com.example.chatapp.domain.errors.AuthError
 import com.example.chatapp.domain.business.SignUpBusiness
+import com.example.chatapp.domain.errors.AuthError
 import com.example.chatapp.domain.usecase.auth.SignUpUseCase
 import com.example.chatapp.domain.usecase.user.SaveUserUseCase
 import kotlinx.coroutines.flow.catch
@@ -19,8 +19,8 @@ class SignUpViewModel(
     private val saveUserUseCase: SaveUserUseCase,
     private val signUpBusiness: SignUpBusiness
 ) : ViewModel() {
-    private val _state = MutableLiveData<State>()
-    val state: LiveData<State> get() = _state
+    private val _state = MutableLiveData<State?>()
+    val state: LiveData<State?> get() = _state
 
     private val _isPasswordVisible = MutableLiveData(false)
     val isPasswordVisible: LiveData<Boolean> get() = _isPasswordVisible
@@ -56,8 +56,6 @@ class SignUpViewModel(
     private fun handlerError(error: AuthError) {
         _state.value = State.SignUpError(
             when (error) {
-                AuthError.WeakPassword -> WEAK_PASSWORD
-                AuthError.InvalidEmail -> INVALID_EMAIL
                 AuthError.EmailAlreadyInUse -> EMAIL_ALREADY_IN_USE
                 AuthError.NetworkError -> NETWORK_ERROR
                 else -> "$UNKNOWN_ERROR ${error.message}"
@@ -74,12 +72,10 @@ class SignUpViewModel(
     }
 
     fun clearState() {
-        _state.value = State.InitialState
+        _state.value = null
     }
 
     private companion object {
-        const val WEAK_PASSWORD = "Senha fraca!"
-        const val INVALID_EMAIL = "E-mail inválido"
         const val EMAIL_ALREADY_IN_USE = "O E-mail já existe"
         const val NETWORK_ERROR = "Ocorreu um erro com a conexão"
         const val UNKNOWN_ERROR = "Erro desconhecido: "

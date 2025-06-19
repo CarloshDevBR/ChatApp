@@ -50,7 +50,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation(libs.swipere)
 
     // Firebase
     implementation(platform(libs.firebase.bom))
@@ -62,6 +61,9 @@ dependencies {
     // Navigation
     implementation(libs.androidx.navigation.fragment)
     implementation(libs.androidx.navigation.ui)
+
+    // Swipere
+    implementation(libs.swipere)
 
     // DI - Koin
     implementation(libs.koin.core)

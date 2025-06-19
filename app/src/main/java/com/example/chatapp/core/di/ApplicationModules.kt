@@ -1,6 +1,5 @@
 package com.example.chatapp.core.di
 
-import com.example.chatapp.presentation.main.MainViewModel
 import com.example.chatapp.core.navigation.ChatNavigation
 import com.example.chatapp.core.navigation.ChatNavigationImpl
 import com.example.chatapp.core.resourceprovider.ResourceProvider
@@ -30,6 +29,7 @@ import com.example.chatapp.domain.usecase.user.SaveUserUseCaseImpl
 import com.example.chatapp.presentation.auth.signin.SignInViewModel
 import com.example.chatapp.presentation.auth.signup.SignUpViewModel
 import com.example.chatapp.presentation.home.HomeViewModel
+import com.example.chatapp.presentation.main.MainViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import org.koin.core.module.Module

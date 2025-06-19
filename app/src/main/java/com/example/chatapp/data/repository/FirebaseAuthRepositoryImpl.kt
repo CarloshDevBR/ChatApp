@@ -8,12 +8,10 @@ import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 
@@ -27,21 +25,14 @@ class FirebaseAuthRepositoryImpl(
     ): Flow<UserResponse> = flow {
         try {
             val result = firebaseAuth.signInWithEmailAndPassword(email, password).await()
-            val firebaseUser = result.user
+            val firebaseUser = result.user ?: throw AuthError.UnknownError
 
-            if (firebaseUser != null) {
-                val userModel = UserResponse(
-                    id = firebaseUser.uid,
-                    name = firebaseUser.displayName ?: "",
-                    email = firebaseUser.email ?: "",
-                    password = password,
-                    image = ""
-                )
+            val userModel = toMapperSignInUserResponse(
+                firebaseUser = firebaseUser,
+                password = password
+            )
 
-                emit(userModel)
-            } else {
-                throw AuthError.UserNotFound
-            }
+            emit(userModel)
         } catch (e: FirebaseException) {
             throw handlerError(e)
         }
@@ -54,31 +45,23 @@ class FirebaseAuthRepositoryImpl(
     ): Flow<UserResponse> = flow {
         try {
             val result = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
-            val firebaseUser = result.user
+            val firebaseUser = result.user ?: throw AuthError.UnknownError
 
-            if (firebaseUser != null) {
-                val profileUpdates = UserProfileChangeRequest.Builder()
-                    .setDisplayName(name)
-                    .build()
+            val profileUpdates = UserProfileChangeRequest.Builder()
+                .setDisplayName(name)
+                .build()
 
-                firebaseUser.updateProfile(profileUpdates).await()
+            firebaseUser.updateProfile(profileUpdates).await()
 
-                val userModel = UserResponse(
-                    id = firebaseUser.uid,
-                    name = firebaseUser.displayName ?: name,
-                    email = firebaseUser.email ?: "",
-                    password = password,
-                    image = ""
-                )
+            val userModel = toMapperSignUpUserResponse(
+                firebaseUser = firebaseUser,
+                name = name,
+                password = password
+            )
 
-                fireStoreAuthRepository.saveUser(userModel)
-                    .catch {
-                        throw it
-                    }
-                    .collect {
-                        emit(userModel)
-                    }
-            }
+            fireStoreAuthRepository.saveUser(userModel)
+
+            emit(userModel)
         } catch (e: FirebaseException) {
             throw handlerError(e)
         }
@@ -94,11 +77,32 @@ class FirebaseAuthRepositoryImpl(
         }
     }
 
-    private fun handlerError(exception: FirebaseException): AuthError = when (exception) {
-        is FirebaseAuthWeakPasswordException -> AuthError.WeakPassword
-        is FirebaseAuthInvalidUserException -> AuthError.UserNotFound
-        is FirebaseAuthInvalidCredentialsException -> AuthError.InvalidCredentials
+    private fun toMapperSignInUserResponse(
+        firebaseUser: FirebaseUser,
+        password: String
+    ) = UserResponse(
+        id = firebaseUser.uid,
+        name = firebaseUser.displayName.orEmpty(),
+        email = firebaseUser.email.orEmpty(),
+        password = password,
+        image = ""
+    )
+
+    private fun toMapperSignUpUserResponse(
+        firebaseUser: FirebaseUser,
+        name: String,
+        password: String
+    ) = UserResponse(
+        id = firebaseUser.uid,
+        name = firebaseUser.displayName ?: name,
+        email = firebaseUser.email.orEmpty(),
+        password = password,
+        image = ""
+    )
+
+    private fun handlerError(exception: FirebaseException) = when (exception) {
         is FirebaseAuthUserCollisionException -> AuthError.EmailAlreadyInUse
+        is FirebaseAuthInvalidCredentialsException -> AuthError.InvalidCredentials
         is FirebaseNetworkException -> AuthError.NetworkError
         else -> AuthError.UnknownError
     }

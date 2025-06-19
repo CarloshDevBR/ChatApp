@@ -4,9 +4,9 @@ import android.text.InputType
 import android.view.View
 import androidx.core.content.ContextCompat
 import com.example.chatapp.R
-import com.example.chatapp.databinding.FragmentSignUpBinding
-import com.example.chatapp.core.navigation.ChatNavigation
 import com.example.chatapp.core.base.BaseFragment
+import com.example.chatapp.core.navigation.ChatNavigation
+import com.example.chatapp.databinding.FragmentSignUpBinding
 import com.google.android.material.textfield.TextInputLayout
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -38,21 +38,16 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>() {
     private fun setupObservers() = with(binding) {
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when (state) {
-                is SignUpState.InitialState -> {}
                 is SignUpState.Subscribed -> {
                     clearState()
                     navigateToHome()
                 }
                 is SignUpState.Loading -> setLoadingButton(true)
-                is SignUpState.InvalidName -> {
-                    inputName.error = getText(R.string.txt_empty)
-                }
-                is SignUpState.InvalidEmail -> {
-                    inputEmail.error = getText(R.string.txt_invalid_email)
-                }
-                is SignUpState.EmptyEmail -> {
-                    inputEmail.error = getText(R.string.txt_invalid_email)
-                }
+                is SignUpState.InvalidName -> inputName.error = getText(R.string.txt_empty)
+                is SignUpState.InvalidEmail -> inputEmail.error =
+                    getText(R.string.txt_invalid_email)
+
+                is SignUpState.EmptyEmail -> inputEmail.error = getText(R.string.txt_invalid_email)
                 is SignUpState.InvalidPassword -> invalidPassword()
                 is SignUpState.EmptyPassword -> emptyPassword()
                 is SignUpState.SignUpError -> {
@@ -78,6 +73,7 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>() {
                         password = password,
                     )
                 }
+                null -> {}
             }
         }
         viewModel.isPasswordVisible.observe(viewLifecycleOwner) { state ->

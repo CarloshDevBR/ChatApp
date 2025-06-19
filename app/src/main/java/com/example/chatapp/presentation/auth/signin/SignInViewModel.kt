@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chatapp.data.model.response.UserResponse
-import com.example.chatapp.domain.errors.AuthError
 import com.example.chatapp.domain.business.SignInBusiness
+import com.example.chatapp.domain.errors.AuthError
 import com.example.chatapp.domain.usecase.auth.SignInUseCase
 import com.example.chatapp.domain.usecase.user.SaveUserUseCase
 import kotlinx.coroutines.flow.catch
@@ -19,8 +19,8 @@ class SignInViewModel(
     private val saveUserUseCase: SaveUserUseCase,
     private val signInBusiness: SignInBusiness
 ) : ViewModel() {
-    private val _state = MutableLiveData<State>()
-    val state: LiveData<State> get() = _state
+    private val _state = MutableLiveData<State?>()
+    val state: LiveData<State?> get() = _state
 
     private val _isPasswordVisible = MutableLiveData(false)
     val isPasswordVisible: LiveData<Boolean> get() = _isPasswordVisible
@@ -56,7 +56,6 @@ class SignInViewModel(
         _state.value = State.SignInError(
             when (error) {
                 AuthError.InvalidCredentials -> INVALID_CREDENTIALS
-                AuthError.UserNotFound -> USER_NOT_FOUND
                 else -> "$UNKNOWN_ERROR ${error.message}"
             }
         )
@@ -71,12 +70,11 @@ class SignInViewModel(
     }
 
     fun clearState() {
-        _state.value = State.InitialState
+        _state.value = null
     }
 
     private companion object {
         const val INVALID_CREDENTIALS = "Credenciais inválidas"
-        const val USER_NOT_FOUND = "Usuário não encontrado"
         const val UNKNOWN_ERROR = "Erro desconhecido: "
     }
 }
