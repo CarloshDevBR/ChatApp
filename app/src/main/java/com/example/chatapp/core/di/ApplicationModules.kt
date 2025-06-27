@@ -24,6 +24,8 @@ import com.example.chatapp.domain.usecase.auth.SignUpUseCase
 import com.example.chatapp.domain.usecase.auth.SignUpUseCaseImpl
 import com.example.chatapp.domain.usecase.user.GetUserUseCase
 import com.example.chatapp.domain.usecase.user.GetUserUseCaseImpl
+import com.example.chatapp.domain.usecase.user.LogoutUserUseCase
+import com.example.chatapp.domain.usecase.user.LogoutUserUseCaseImpl
 import com.example.chatapp.domain.usecase.user.SaveUserUseCase
 import com.example.chatapp.domain.usecase.user.SaveUserUseCaseImpl
 import com.example.chatapp.presentation.auth.signin.SignInViewModel
@@ -109,7 +111,8 @@ class ApplicationModules {
         viewModel {
             HomeViewModel(
                 resourceProvider = get(),
-                getUserUseCase = get()
+                getUserUseCase = get(),
+                logoutUserUseCase = get()
             )
         }
     }
@@ -131,6 +134,11 @@ class ApplicationModules {
         }
         single<SaveUserUseCase> {
             SaveUserUseCaseImpl(
+                repository = get()
+            )
+        }
+        single<LogoutUserUseCase> {
+            LogoutUserUseCaseImpl(
                 repository = get()
             )
         }

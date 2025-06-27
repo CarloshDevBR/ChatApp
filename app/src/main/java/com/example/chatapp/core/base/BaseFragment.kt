@@ -32,9 +32,8 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
         setupViews()
     }
 
-    protected fun navigate(navDirections: NavDirections) {
+    protected fun navigate(navDirections: NavDirections) =
         findNavController().navigate(navDirections)
-    }
 
     protected fun popBackStack() = findNavController().popBackStack()
 

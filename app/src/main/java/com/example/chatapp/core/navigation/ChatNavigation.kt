@@ -7,4 +7,5 @@ interface ChatNavigation {
     fun getSignUpFromSignInFragment(): NavDirections
     fun getHomeFromSignUpFragment(): NavDirections
     fun getSignInFromSignUpFragment(): NavDirections
+    fun getSignInFromHomeFragment(): NavDirections
 }

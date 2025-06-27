@@ -18,7 +18,6 @@ class SignInFragment : BaseFragment<FragmentSignInBinding>() {
     override fun inflate(): FragmentSignInBinding = FragmentSignInBinding.inflate(layoutInflater)
 
     override fun setupViews() {
-        super.setupViews()
         setupListeners()
         setupObservers()
     }
@@ -45,7 +44,6 @@ class SignInFragment : BaseFragment<FragmentSignInBinding>() {
                 is SignInState.Loading -> setLoadingButton(true)
                 is SignInState.InvalidEmail -> inputEmail.error =
                     getText(R.string.txt_invalid_email)
-
                 is SignInState.EmptyEmail -> inputEmail.error = getText(R.string.txt_empty_email)
                 is SignInState.InvalidPassword -> invalidPassword()
                 is SignInState.EmptyPassword -> emptyPassword()
