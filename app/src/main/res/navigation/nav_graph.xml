@@ -21,6 +21,8 @@
             app:popUpTo="@id/sign_in_fragment"
             app:popUpToInclusive="true" />
 
+        <deepLink app:uri="http://meusite.com/sign_in" />
+
     </fragment>
 
     <fragment
@@ -38,6 +40,8 @@
         <action
             android:id="@+id/action_signUpFragment_to_signInFragment"
             app:destination="@id/sign_in_fragment" />
+
+        <deepLink app:uri="http://meusite.com/sign_up" />
 
     </fragment>
 
