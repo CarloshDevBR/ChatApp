@@ -1,23 +1,32 @@
 package com.example.chatapp.presentation.auth.signin
 
+import android.os.Bundle
 import android.text.InputType
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.chatapp.R
-import com.example.chatapp.core.base.BaseFragment
-import com.example.chatapp.core.navigation.ChatNavigation
 import com.example.chatapp.databinding.FragmentSignInBinding
 import com.google.android.material.textfield.TextInputLayout
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SignInFragment : BaseFragment<FragmentSignInBinding>() {
+class SignInFragment : Fragment() {
+    private val binding by lazy {
+        FragmentSignInBinding.inflate(layoutInflater)
+    }
     private val viewModel: SignInViewModel by viewModel()
-    private val navigation by inject<ChatNavigation>()
 
-    override fun inflate(): FragmentSignInBinding = FragmentSignInBinding.inflate(layoutInflater)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = binding.root
 
-    override fun setupViews() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setupListeners()
         setupObservers()
     }
@@ -30,32 +39,26 @@ class SignInFragment : BaseFragment<FragmentSignInBinding>() {
             navigateToSignUp()
         }
         btnSignIn.setOnClickListener {
-            signIn()
+            validateForm()
         }
     }
 
     private fun setupObservers() = with(binding) {
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when (state) {
-                is SignInState.Logged -> {
+                SignInState.Logged -> {
                     clearState()
                     navigateToHome()
                 }
-                is SignInState.Loading -> setLoadingButton(true)
-                is SignInState.InvalidEmail -> inputEmail.error =
-                    getText(R.string.txt_invalid_email)
-                is SignInState.EmptyEmail -> inputEmail.error = getText(R.string.txt_empty_email)
-                is SignInState.InvalidPassword -> invalidPassword()
-                is SignInState.EmptyPassword -> emptyPassword()
-                is SignInState.SignInError -> {
-                    clearState()
 
-                    setAlertView(
-                        visibility = true,
-                        message = state.error
-                    )
-                }
-                is SignInState.IsValidForm -> {
+                SignInState.Loading -> setLoadingButton(true)
+                SignInState.InvalidEmail -> inputEmail.error =
+                    getText(R.string.txt_invalid_email)
+
+                SignInState.EmptyEmail -> inputEmail.error = getText(R.string.txt_empty_email)
+                SignInState.InvalidPassword -> invalidPassword()
+                SignInState.EmptyPassword -> emptyPassword()
+                SignInState.IsValidForm -> {
                     clearState()
 
                     inputPasswordLayout.endIconMode = TextInputLayout.END_ICON_CUSTOM
@@ -68,6 +71,15 @@ class SignInFragment : BaseFragment<FragmentSignInBinding>() {
                         password = password
                     )
                 }
+
+                is SignInState.SignInError -> {
+                    clearState()
+
+                    setAlertView(
+                        visibility = true,
+                        message = state.error
+                    )
+                }
                 null -> {}
             }
         }
@@ -76,7 +88,7 @@ class SignInFragment : BaseFragment<FragmentSignInBinding>() {
         }
     }
 
-    private fun signIn() = with(binding) {
+    private fun validateForm() = with(binding) {
         val email = inputEmail.text.toString().trim()
         val password = inputPassword.text.toString().trim()
 
@@ -116,21 +128,27 @@ class SignInFragment : BaseFragment<FragmentSignInBinding>() {
         inputEmail.error = getText(R.string.txt_empty_password)
     }
 
-    private fun setLoadingButton(value: Boolean) = with(binding) {
-        btnSignIn.isLoading = value
+    private fun setLoadingButton(value: Boolean) = with(binding.btnSignIn) {
+        isLoading = value
     }
 
     private fun setAlertView(
         visibility: Boolean,
         message: String = ""
-    ) = with(binding) {
-        componentAlert.containerAlert.visibility = if (visibility) View.VISIBLE else View.GONE
-        componentAlert.textAlert.text = message
+    ) = with(binding.componentAlert) {
+        containerAlert.visibility = if (visibility) View.VISIBLE else View.GONE
+        textAlert.text = message
     }
 
-    private fun navigateToHome() = navigate(navigation.getHomeFromSignInFragment())
+    private fun navigateToHome() {
+        val nav = SignInFragmentDirections.actionSignInFragmentToHomeFragment()
+        findNavController().navigate(nav)
+    }
 
-    private fun navigateToSignUp() = navigate(navigation.getSignUpFromSignInFragment())
+    private fun navigateToSignUp() {
+        val nav = SignInFragmentDirections.actionSignInFragmentToSignUpFragment()
+        findNavController().navigate(nav)
+    }
 
     private fun clearState() {
         setLoadingButton(false)

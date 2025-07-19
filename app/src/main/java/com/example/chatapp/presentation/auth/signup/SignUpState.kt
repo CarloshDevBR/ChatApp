@@ -8,7 +8,7 @@ sealed interface SignUpState {
     data object InvalidPassword : SignUpState
     data object EmptyPassword : SignUpState
     data object IsValidForm : SignUpState
-    data object Subscribed : SignUpState
+    data object Registered : SignUpState
 
     data class SignUpError(
         val error: String

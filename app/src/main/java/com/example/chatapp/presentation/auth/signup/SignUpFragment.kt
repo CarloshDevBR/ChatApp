@@ -1,23 +1,32 @@
 package com.example.chatapp.presentation.auth.signup
 
+import android.os.Bundle
 import android.text.InputType
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.chatapp.R
-import com.example.chatapp.core.base.BaseFragment
-import com.example.chatapp.core.navigation.ChatNavigation
 import com.example.chatapp.databinding.FragmentSignUpBinding
 import com.google.android.material.textfield.TextInputLayout
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SignUpFragment : BaseFragment<FragmentSignUpBinding>() {
+class SignUpFragment : Fragment() {
+    private val binding by lazy {
+        FragmentSignUpBinding.inflate(layoutInflater)
+    }
     private val viewModel: SignUpViewModel by viewModel()
-    private val navigation by inject<ChatNavigation>()
 
-    override fun inflate(): FragmentSignUpBinding = FragmentSignUpBinding.inflate(layoutInflater)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = binding.root
 
-    override fun setupViews() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setupListeners()
         setupObservers()
     }
@@ -30,33 +39,27 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>() {
             navigateToSignIn()
         }
         btnSignUp.setOnClickListener {
-            signUp()
+            validateForm()
         }
     }
 
     private fun setupObservers() = with(binding) {
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when (state) {
-                is SignUpState.Subscribed -> {
+                SignUpState.Registered -> {
                     clearState()
                     navigateToHome()
                 }
-                is SignUpState.Loading -> setLoadingButton(true)
-                is SignUpState.InvalidName -> inputName.error = getText(R.string.txt_empty)
-                is SignUpState.InvalidEmail -> inputEmail.error =
-                    getText(R.string.txt_invalid_email)
-                is SignUpState.EmptyEmail -> inputEmail.error = getText(R.string.txt_invalid_email)
-                is SignUpState.InvalidPassword -> invalidPassword()
-                is SignUpState.EmptyPassword -> emptyPassword()
-                is SignUpState.SignUpError -> {
-                    clearState()
 
-                    setAlertView(
-                        visibility = true,
-                        message = state.error
-                    )
-                }
-                is SignUpState.IsValidForm -> {
+                SignUpState.Loading -> setLoadingButton(true)
+                SignUpState.InvalidName -> inputName.error = getText(R.string.txt_empty)
+                SignUpState.InvalidEmail -> inputEmail.error =
+                    getText(R.string.txt_invalid_email)
+
+                SignUpState.EmptyEmail -> inputEmail.error = getText(R.string.txt_invalid_email)
+                SignUpState.InvalidPassword -> invalidPassword()
+                SignUpState.EmptyPassword -> emptyPassword()
+                SignUpState.IsValidForm -> {
                     clearState()
 
                     inputPasswordLayout.endIconMode = TextInputLayout.END_ICON_CUSTOM
@@ -71,6 +74,15 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>() {
                         password = password,
                     )
                 }
+
+                is SignUpState.SignUpError -> {
+                    clearState()
+
+                    setAlertView(
+                        visibility = true,
+                        message = state.error
+                    )
+                }
                 null -> {}
             }
         }
@@ -79,8 +91,16 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>() {
         }
     }
 
-    private fun setLoadingButton(value: Boolean) = with(binding) {
-        btnSignUp.isLoading = value
+    private fun validateForm() = with(binding) {
+        val name = inputName.text.toString().trim()
+        val email = inputEmail.text.toString().trim()
+        val password = inputPassword.text.toString().trim()
+
+        viewModel.validateForm(
+            name = name,
+            email = email,
+            password = password
+        )
     }
 
     private fun togglePasswordVisibility(visibility: Boolean) = with(binding) {
@@ -113,29 +133,27 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>() {
         inputEmail.error = getText(R.string.txt_empty_password)
     }
 
-    private fun signUp() = with(binding) {
-        val name = inputName.text.toString().trim()
-        val email = inputEmail.text.toString().trim()
-        val password = inputPassword.text.toString().trim()
-
-        viewModel.validateForm(
-            name = name,
-            email = email,
-            password = password
-        )
+    private fun setLoadingButton(value: Boolean) = with(binding.btnSignUp) {
+        isLoading = value
     }
 
     private fun setAlertView(
         visibility: Boolean,
         message: String = ""
-    ) = with(binding) {
-        componentAlert.containerAlert.visibility = if (visibility) View.VISIBLE else View.GONE
-        componentAlert.textAlert.text = message
+    ) = with(binding.componentAlert) {
+        containerAlert.visibility = if (visibility) View.VISIBLE else View.GONE
+        textAlert.text = message
     }
 
-    private fun navigateToHome() = navigate(navigation.getHomeFromSignUpFragment())
+    private fun navigateToHome() {
+        val nav = SignUpFragmentDirections.actionSignUpFragmentToHomeFragment()
+        findNavController().navigate(nav)
+    }
 
-    private fun navigateToSignIn() = navigate(navigation.getSignInFromSignUpFragment())
+    private fun navigateToSignIn() {
+        val nav = SignUpFragmentDirections.actionSignUpFragmentToSignInFragment()
+        findNavController().navigate(nav)
+    }
 
     private fun clearState() {
         setLoadingButton(false)

@@ -1,7 +1,5 @@
 package com.example.chatapp.core.di
 
-import com.example.chatapp.core.navigation.ChatNavigation
-import com.example.chatapp.core.navigation.ChatNavigationImpl
 import com.example.chatapp.core.resourceprovider.ResourceProvider
 import com.example.chatapp.core.resourceprovider.ResourceProviderImpl
 import com.example.chatapp.data.datasource.SharedPreferencesDataSource
@@ -47,7 +45,6 @@ class ApplicationModules {
             factoryViewModel()
             factoryBusiness()
             factoryUseCase()
-            factoryNavigation()
         }
     )
 
@@ -156,12 +153,6 @@ class ApplicationModules {
             SignOutUseCaseImpl(
                 repository = get()
             )
-        }
-    }
-
-    private fun Module.factoryNavigation() {
-        factory<ChatNavigation> {
-            ChatNavigationImpl()
         }
     }
 }

@@ -1,31 +1,35 @@
 package com.example.chatapp.presentation.home
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.chatapp.R
-import com.example.chatapp.core.base.BaseFragment
-import com.example.chatapp.core.navigation.ChatNavigation
 import com.example.chatapp.core.util.hideKeyboard
 import com.example.chatapp.data.model.response.UserResponse
 import com.example.chatapp.databinding.FragmentHomeBinding
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class HomeFragment : BaseFragment<FragmentHomeBinding>() {
+class HomeFragment : Fragment() {
+    private val binding by lazy {
+        FragmentHomeBinding.inflate(layoutInflater)
+    }
     private val viewModel: HomeViewModel by viewModel()
-    private val navigation by inject<ChatNavigation>()
 
-    override fun inflate(): FragmentHomeBinding = FragmentHomeBinding.inflate(layoutInflater)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = binding.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupObservers()
-    }
-
-    override fun setupViews() {
         setupListeners()
         viewModel.getUser()
     }
@@ -51,13 +55,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.profile -> true
-
                 R.id.logout -> {
                     viewModel.logout()
                     navigateToSignIn()
                     true
                 }
-
                 else -> true
             }
         }
@@ -67,7 +69,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         title = viewModel.getWelcomeMessage(user.name)
     }
 
-    private fun navigateToSignIn() = navigate(navigation.getSignInFromHomeFragment())
+    private fun navigateToSignIn() {
+        val navDirections = HomeFragmentDirections.actionHomeFragmentToSignInFragment()
+        findNavController().navigate(navDirections)
+    }
 
     override fun onDestroyView() {
         hideKeyboard()

@@ -48,7 +48,7 @@ class SignUpViewModel(
             saveUserUseCase.invoke(
                 params = SaveUserUseCase.Params(user)
             ).collect {
-                _state.value = State.Subscribed
+                _state.value = State.Registered
             }
         }
     }

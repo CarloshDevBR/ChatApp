@@ -8,6 +8,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.example.chatapp.R
 import com.example.chatapp.databinding.ComponentButtonBinding
+import androidx.core.content.withStyledAttributes
 
 class ChatButton @JvmOverloads constructor(
     context: Context,
@@ -38,12 +39,10 @@ class ChatButton @JvmOverloads constructor(
     }
 
     private fun setupAttrs(attrs: AttributeSet) {
-        val attributes = context.obtainStyledAttributes(attrs, R.styleable.Button)
-
-        label = attributes.getString(R.styleable.Button_label) ?: ""
-        isLoading = attributes.getBoolean(R.styleable.Button_loading, false)
-
-        attributes.recycle()
+        context.withStyledAttributes(attrs, R.styleable.Button) {
+            label = getString(R.styleable.Button_label) ?: ""
+            isLoading = getBoolean(R.styleable.Button_loading, false)
+        }
     }
 
     private fun setupComponent() = with(binding) {
