@@ -70,10 +70,12 @@ class SignUpViewModel(
     }
 
     fun togglePasswordVisibility() {
-        val state = _event.value
-        if (state is Event.PasswordVisible) {
-            _event.value = Event.PasswordVisible(state.visible)
+        val state = event.value
+        if (state !is Event.PasswordVisible) {
+            _event.value = Event.PasswordVisible(true)
+            return
         }
+        _event.value = Event.PasswordVisible(state.visible.not())
     }
 
     fun clearState() {

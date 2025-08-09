@@ -69,7 +69,6 @@ class SignInFragment : Fragment() {
                 is SignInEvent.Loading -> setLoadingButton(true)
                 is SignInEvent.InvalidEmail -> inputEmail.error =
                     getText(R.string.txt_invalid_email)
-
                 is SignInEvent.EmptyEmail -> inputEmail.error = getText(R.string.txt_empty_email)
                 is SignInEvent.InvalidPassword -> invalidPassword()
                 is SignInEvent.EmptyPassword -> emptyPassword()
@@ -87,7 +86,6 @@ class SignInFragment : Fragment() {
                         password = password
                     )
                 }
-
                 is SignInEvent.SignInError -> {
                     clearState()
 

@@ -35,9 +35,15 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupObservers()
         setupListeners()
+        setupStateObserver()
+        setupEventObserver()
         viewModel.getUser()
+    }
+
+    override fun onDestroyView() {
+        hideKeyboard()
+        super.onDestroyView()
     }
 
     private fun setupListeners() = with(binding) {
@@ -49,9 +55,20 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun setupObservers() {
-        viewModel.user.observe(viewLifecycleOwner) { state ->
-            setupToolbar(state)
+    private fun setupStateObserver() {
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is HomeState.User -> setupToolbar(state.data)
+                else -> Unit
+            }
+        }
+    }
+
+    private fun setupEventObserver() {
+        viewModel.event.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is HomeEvent.LoggedOut -> navigateToSignIn()
+            }
         }
     }
 
@@ -63,10 +80,8 @@ class HomeFragment : Fragment() {
                 R.id.profile -> true
                 R.id.logout -> {
                     viewModel.logout()
-                    navigateToSignIn()
                     true
                 }
-
                 else -> true
             }
         }
@@ -79,10 +94,5 @@ class HomeFragment : Fragment() {
     private fun navigateToSignIn() {
         val navDirections = HomeFragmentDirections.actionHomeFragmentToSignInFragment()
         findNavController().navigate(navDirections)
-    }
-
-    override fun onDestroyView() {
-        hideKeyboard()
-        super.onDestroyView()
     }
 }

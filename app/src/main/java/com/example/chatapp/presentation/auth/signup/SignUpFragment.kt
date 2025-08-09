@@ -57,7 +57,6 @@ class SignUpFragment : Fragment() {
                     clearState()
                     navigateToHome()
                 }
-
                 else -> Unit
             }
         }
@@ -70,7 +69,6 @@ class SignUpFragment : Fragment() {
                 is SignUpEvent.InvalidName -> inputName.error = getText(R.string.txt_empty)
                 is SignUpEvent.InvalidEmail -> inputEmail.error =
                     getText(R.string.txt_invalid_email)
-
                 is SignUpEvent.EmptyEmail -> inputEmail.error = getText(R.string.txt_invalid_email)
                 is SignUpEvent.InvalidPassword -> invalidPassword()
                 is SignUpEvent.EmptyPassword -> emptyPassword()
@@ -89,7 +87,6 @@ class SignUpFragment : Fragment() {
                         password = password,
                     )
                 }
-
                 is SignUpEvent.PasswordVisible -> togglePasswordVisibility(state.visible)
                 is SignUpEvent.SignUpError -> {
                     clearState()

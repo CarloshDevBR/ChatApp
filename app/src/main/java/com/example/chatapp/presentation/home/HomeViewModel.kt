@@ -5,35 +5,47 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chatapp.R
+import com.example.chatapp.core.livedata.single.SingleLiveEvent
 import com.example.chatapp.core.resourceprovider.ResourceProvider
-import com.example.chatapp.data.model.response.UserResponse
 import com.example.chatapp.domain.usecase.user.GetUserUseCase
 import com.example.chatapp.domain.usecase.user.LogoutUserUseCase
 import kotlinx.coroutines.launch
+import com.example.chatapp.presentation.home.HomeEvent as Event
+import com.example.chatapp.presentation.home.HomeState as State
 
 class HomeViewModel(
     private val resourceProvider: ResourceProvider,
     private val getUserUseCase: GetUserUseCase,
     private val logoutUserUseCase: LogoutUserUseCase
 ) : ViewModel() {
-    private val _user = MutableLiveData<UserResponse>()
-    val user: LiveData<UserResponse> get() = _user
+    private val _state = MutableLiveData<State>()
+    val state: LiveData<State> get() = _state
+
+    private val _event = SingleLiveEvent<Event>()
+    val event: LiveData<Event> get() = _event
 
     fun getUser() {
         viewModelScope.launch {
             getUserUseCase.invoke()
                 .collect {
-                    _user.value = it
+                    if (it != null) {
+                        _state.value = State.User(it)
+                        return@collect
+                    }
+                    _event.value = Event.LoggedOut
+                }
+        }
+    }
+
+    fun logout() {
+        viewModelScope.launch {
+            logoutUserUseCase.invoke()
+                .collect {
+                    _event.value = Event.LoggedOut
                 }
         }
     }
 
     fun getWelcomeMessage(name: String) =
         resourceProvider.getString(R.string.txt_title_toolbar, name)
-
-    fun logout() {
-        viewModelScope.launch {
-            logoutUserUseCase.invoke()
-        }
-    }
 }

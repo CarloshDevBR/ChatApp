@@ -8,7 +8,7 @@ sealed interface SignUpEvent {
     data object InvalidPassword : SignUpEvent
     data object EmptyPassword : SignUpEvent
     data object IsValidForm : SignUpEvent
-    data class PasswordVisible(val visible: Boolean) : SignUpEvent
+    data class PasswordVisible(val visible: Boolean = false) : SignUpEvent
 
     data class SignUpError(
         val error: String
