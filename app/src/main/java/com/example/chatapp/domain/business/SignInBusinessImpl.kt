@@ -1,16 +1,16 @@
 package com.example.chatapp.domain.business
 
 import android.util.Patterns
-import com.example.chatapp.presentation.auth.signin.SignInState
+import com.example.chatapp.presentation.auth.signin.SignInEvent
 
 class SignInBusinessImpl : SignInBusiness {
-    override fun isValidForm(email: String, password: String): SignInState {
+    override fun isValidForm(email: String, password: String): SignInEvent {
         return when {
-            email.isEmpty() -> SignInState.EmptyEmail
-            validEmail(email).not() -> SignInState.InvalidEmail
-            password.isEmpty() -> SignInState.EmptyPassword
-            validPassword(password).not() -> SignInState.InvalidPassword
-            else -> SignInState.IsValidForm
+            email.isEmpty() -> SignInEvent.EmptyEmail
+            validEmail(email).not() -> SignInEvent.InvalidEmail
+            password.isEmpty() -> SignInEvent.EmptyPassword
+            validPassword(password).not() -> SignInEvent.InvalidPassword
+            else -> SignInEvent.IsValidForm
         }
     }
 

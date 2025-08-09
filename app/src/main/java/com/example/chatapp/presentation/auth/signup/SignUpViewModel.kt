@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.chatapp.core.livedata.single.SingleLiveEvent
 import com.example.chatapp.data.model.response.UserResponse
 import com.example.chatapp.domain.business.SignUpBusiness
 import com.example.chatapp.domain.errors.AuthError
@@ -12,6 +13,7 @@ import com.example.chatapp.domain.usecase.user.SaveUserUseCase
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
+import com.example.chatapp.presentation.auth.signup.SignUpEvent as Event
 import com.example.chatapp.presentation.auth.signup.SignUpState as State
 
 class SignUpViewModel(
@@ -19,11 +21,11 @@ class SignUpViewModel(
     private val saveUserUseCase: SaveUserUseCase,
     private val signUpBusiness: SignUpBusiness
 ) : ViewModel() {
-    private val _state = MutableLiveData<State?>()
-    val state: LiveData<State?> get() = _state
+    private val _state = MutableLiveData<State>()
+    val state: LiveData<State> get() = _state
 
-    private val _isPasswordVisible = MutableLiveData(false)
-    val isPasswordVisible: LiveData<Boolean> get() = _isPasswordVisible
+    private val _event = SingleLiveEvent<Event>()
+    val event: LiveData<Event> get() = _event
 
     fun signUp(name: String, email: String, password: String) {
         viewModelScope.launch {
@@ -34,7 +36,7 @@ class SignUpViewModel(
                     password = password
                 )
             ).onStart {
-                _state.value = State.Loading
+                _event.value = Event.Loading
             }.catch {
                 handlerError(it as AuthError)
             }.collect {
@@ -54,7 +56,7 @@ class SignUpViewModel(
     }
 
     private fun handlerError(error: AuthError) {
-        _state.value = State.SignUpError(
+        _event.value = Event.SignUpError(
             when (error) {
                 AuthError.EmailAlreadyInUse -> EMAIL_ALREADY_IN_USE
                 AuthError.NetworkError -> NETWORK_ERROR
@@ -64,15 +66,18 @@ class SignUpViewModel(
     }
 
     fun validateForm(name: String, email: String, password: String) {
-        _state.value = signUpBusiness.isValidateForm(name, email, password)
+        _event.value = signUpBusiness.isValidateForm(name, email, password)
     }
 
     fun togglePasswordVisibility() {
-        _isPasswordVisible.value = !_isPasswordVisible.value!!
+        val state = _event.value
+        if (state is Event.PasswordVisible) {
+            _event.value = Event.PasswordVisible(state.visible)
+        }
     }
 
     fun clearState() {
-        _state.value = null
+        _state.value = State.InitialState
     }
 
     private companion object {

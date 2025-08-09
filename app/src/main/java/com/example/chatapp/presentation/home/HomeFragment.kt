@@ -16,16 +16,22 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment : Fragment() {
-    private val binding by lazy {
-        FragmentHomeBinding.inflate(layoutInflater)
-    }
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
     private val viewModel: HomeViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View = binding.root
+    ): View {
+        _binding = FragmentHomeBinding.inflate(
+            inflater,
+            container,
+            false
+        )
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -60,6 +66,7 @@ class HomeFragment : Fragment() {
                     navigateToSignIn()
                     true
                 }
+
                 else -> true
             }
         }

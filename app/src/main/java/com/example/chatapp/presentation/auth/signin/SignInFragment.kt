@@ -14,21 +14,28 @@ import com.google.android.material.textfield.TextInputLayout
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SignInFragment : Fragment() {
-    private val binding by lazy {
-        FragmentSignInBinding.inflate(layoutInflater)
-    }
+    private var _binding: FragmentSignInBinding? = null
+    private val binding get() = _binding!!
     private val viewModel: SignInViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View = binding.root
+    ): View {
+        _binding = FragmentSignInBinding.inflate(
+            inflater,
+            container,
+            false
+        )
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupListeners()
-        setupObservers()
+        setupStateObserver()
+        setupEventObserver()
     }
 
     private fun setupListeners() = with(binding) {
@@ -43,22 +50,31 @@ class SignInFragment : Fragment() {
         }
     }
 
-    private fun setupObservers() = with(binding) {
+    private fun setupStateObserver() {
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when (state) {
-                SignInState.Logged -> {
+                is SignInState.Logged -> {
                     clearState()
                     navigateToHome()
                 }
 
-                SignInState.Loading -> setLoadingButton(true)
-                SignInState.InvalidEmail -> inputEmail.error =
+                else -> Unit
+            }
+        }
+    }
+
+    private fun setupEventObserver() = with(binding) {
+        viewModel.event.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is SignInEvent.Loading -> setLoadingButton(true)
+                is SignInEvent.InvalidEmail -> inputEmail.error =
                     getText(R.string.txt_invalid_email)
 
-                SignInState.EmptyEmail -> inputEmail.error = getText(R.string.txt_empty_email)
-                SignInState.InvalidPassword -> invalidPassword()
-                SignInState.EmptyPassword -> emptyPassword()
-                SignInState.IsValidForm -> {
+                is SignInEvent.EmptyEmail -> inputEmail.error = getText(R.string.txt_empty_email)
+                is SignInEvent.InvalidPassword -> invalidPassword()
+                is SignInEvent.EmptyPassword -> emptyPassword()
+                is SignInEvent.PasswordVisible -> togglePasswordVisibility(state.visible)
+                is SignInEvent.IsValidForm -> {
                     clearState()
 
                     inputPasswordLayout.endIconMode = TextInputLayout.END_ICON_CUSTOM
@@ -72,7 +88,7 @@ class SignInFragment : Fragment() {
                     )
                 }
 
-                is SignInState.SignInError -> {
+                is SignInEvent.SignInError -> {
                     clearState()
 
                     setAlertView(
@@ -80,11 +96,7 @@ class SignInFragment : Fragment() {
                         message = state.error
                     )
                 }
-                null -> {}
             }
-        }
-        viewModel.isPasswordVisible.observe(viewLifecycleOwner) { state ->
-            togglePasswordVisibility(visibility = state)
         }
     }
 
