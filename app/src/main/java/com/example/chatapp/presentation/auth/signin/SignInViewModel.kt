@@ -4,7 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.chatapp.R
 import com.example.chatapp.core.livedata.single.SingleLiveEvent
+import com.example.chatapp.core.resourceprovider.ResourceProvider
 import com.example.chatapp.data.model.response.UserResponse
 import com.example.chatapp.domain.business.SignInBusiness
 import com.example.chatapp.domain.errors.AuthError
@@ -17,6 +19,7 @@ import com.example.chatapp.presentation.auth.signin.SignInEvent as Event
 import com.example.chatapp.presentation.auth.signin.SignInState as State
 
 class SignInViewModel(
+    private val resourceProvider: ResourceProvider,
     private val signInUseCase: SignInUseCase,
     private val saveUserUseCase: SaveUserUseCase,
     private val signInBusiness: SignInBusiness
@@ -57,8 +60,11 @@ class SignInViewModel(
     private fun handlerError(error: AuthError) {
         _event.value = Event.SignInError(
             when (error) {
-                AuthError.InvalidCredentials -> INVALID_CREDENTIALS
-                else -> "$UNKNOWN_ERROR ${error.message}"
+                is AuthError.InvalidCredentials -> resourceProvider.getString(R.string.txt_invalid_credentials)
+                else -> resourceProvider.getString(
+                    R.string.txt_unknown_error,
+                    error.message.toString()
+                )
             }
         )
     }
@@ -78,10 +84,5 @@ class SignInViewModel(
 
     fun clearState() {
         _state.value = State.InitialState
-    }
-
-    private companion object {
-        const val INVALID_CREDENTIALS = "Credenciais inválidas"
-        const val UNKNOWN_ERROR = "Erro desconhecido: "
     }
 }

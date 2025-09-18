@@ -17,4 +17,8 @@
     <string name="btn_txt_login">Entrar</string>
     <string name="btn_txt_register">Cadastrar</string>
     <string name="txt_title_toolbar">Hello %1$s</string>
+    <string name="txt_invalid_credentials">Credenciais inválidas</string>
+    <string name="txt_unknown_error">Erro desconhecido: %1$s</string>
+    <string name="txt_email_already_in_use">O E-mail já existe</string>
+    <string name="txt_network_error">Ocorreu um erro com a conexão</string>
 </resources>

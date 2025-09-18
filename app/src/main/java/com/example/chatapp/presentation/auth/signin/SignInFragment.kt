@@ -38,6 +38,11 @@ class SignInFragment : Fragment() {
         setupEventObserver()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
     private fun setupListeners() = with(binding) {
         inputPasswordLayout.setEndIconOnClickListener {
             viewModel.togglePasswordVisibility()
@@ -57,7 +62,6 @@ class SignInFragment : Fragment() {
                     clearState()
                     navigateToHome()
                 }
-
                 else -> Unit
             }
         }

@@ -42,8 +42,9 @@ class HomeFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        hideKeyboard()
         super.onDestroyView()
+        hideKeyboard()
+        _binding = null
     }
 
     private fun setupListeners() = with(binding) {

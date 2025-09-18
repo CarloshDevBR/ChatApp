@@ -4,7 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.chatapp.R
 import com.example.chatapp.core.livedata.single.SingleLiveEvent
+import com.example.chatapp.core.resourceprovider.ResourceProvider
 import com.example.chatapp.data.model.response.UserResponse
 import com.example.chatapp.domain.business.SignUpBusiness
 import com.example.chatapp.domain.errors.AuthError
@@ -17,6 +19,7 @@ import com.example.chatapp.presentation.auth.signup.SignUpEvent as Event
 import com.example.chatapp.presentation.auth.signup.SignUpState as State
 
 class SignUpViewModel(
+    private val resourceProvider: ResourceProvider,
     private val signUpUseCase: SignUpUseCase,
     private val saveUserUseCase: SaveUserUseCase,
     private val signUpBusiness: SignUpBusiness
@@ -58,9 +61,12 @@ class SignUpViewModel(
     private fun handlerError(error: AuthError) {
         _event.value = Event.SignUpError(
             when (error) {
-                AuthError.EmailAlreadyInUse -> EMAIL_ALREADY_IN_USE
-                AuthError.NetworkError -> NETWORK_ERROR
-                else -> "$UNKNOWN_ERROR ${error.message}"
+                is AuthError.EmailAlreadyInUse -> resourceProvider.getString(R.string.txt_email_already_in_use)
+                is AuthError.NetworkError -> resourceProvider.getString(R.string.txt_network_error)
+                else -> resourceProvider.getString(
+                    R.string.txt_unknown_error,
+                    error.message.toString()
+                )
             }
         )
     }
@@ -80,11 +86,5 @@ class SignUpViewModel(
 
     fun clearState() {
         _state.value = State.InitialState
-    }
-
-    private companion object {
-        const val EMAIL_ALREADY_IN_USE = "O E-mail já existe"
-        const val NETWORK_ERROR = "Ocorreu um erro com a conexão"
-        const val UNKNOWN_ERROR = "Erro desconhecido: "
     }
 }
