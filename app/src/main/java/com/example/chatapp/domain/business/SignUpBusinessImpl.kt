@@ -1,7 +1,7 @@
 package com.example.chatapp.domain.business
 
 import android.util.Patterns
-import com.example.chatapp.presentation.auth.signup.SignUpEvent
+import com.example.chatapp.presentation.signup.state.SignUpEvent
 
 class SignUpBusinessImpl : SignUpBusiness {
     override fun isValidateForm(name: String, email: String, password: String): SignUpEvent {

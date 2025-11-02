@@ -4,6 +4,8 @@
         <item name="colorPrimary">@color/primary_500</item>
         <item name="colorSecondary">@color/secondary_500</item>
         <item name="colorTertiary">@color/tertiary_500</item>
+
+        <item name="android:statusBarColor">@color/fourth_500</item>
     </style>
 
     <style name="Theme.ChatApp" parent="Base.Theme.ChatApp" />

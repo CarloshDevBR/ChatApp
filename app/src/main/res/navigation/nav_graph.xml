@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/sign_in_fragment"
-        android:name="com.example.chatapp.presentation.auth.signin.SignInFragment"
+        android:name="com.example.chatapp.presentation.signin.SignInFragment"
         android:label="sign in"
         tools:layout="@layout/fragment_sign_in">
 
@@ -27,7 +27,7 @@
 
     <fragment
         android:id="@+id/sign_up_fragment"
-        android:name="com.example.chatapp.presentation.auth.signup.SignUpFragment"
+        android:name="com.example.chatapp.presentation.signup.SignUpFragment"
         android:label="register"
         tools:layout="@layout/fragment_sign_up">
 
@@ -58,11 +58,21 @@
             app:popUpToInclusive="true" />
 
         <action
+            android:id="@+id/action_homeFragment_to_profileFragment"
+            app:destination="@id/profile_fragment" />
+
+        <action
             android:id="@+id/action_homeFragment_to_signInFragment"
             app:destination="@id/sign_in_fragment"
             app:popUpTo="@id/home_fragment"
             app:popUpToInclusive="true" />
 
     </fragment>
+
+    <fragment
+        android:id="@+id/profile_fragment"
+        android:name="com.example.chatapp.presentation.profile.ProfileFragment"
+        android:label="perfil"
+        tools:layout="@layout/fragment_profile" />
 
 </navigation>

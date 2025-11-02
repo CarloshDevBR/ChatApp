@@ -17,7 +17,7 @@
 
     <LinearLayout
         android:id="@+id/linearlayout_container_message"
-        android:layout_width="@dimen/spacing_reset"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="12dp"
         android:orientation="vertical"

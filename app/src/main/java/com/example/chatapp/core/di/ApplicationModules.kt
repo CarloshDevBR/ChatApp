@@ -26,8 +26,8 @@ import com.example.chatapp.domain.usecase.user.LogoutUserUseCase
 import com.example.chatapp.domain.usecase.user.LogoutUserUseCaseImpl
 import com.example.chatapp.domain.usecase.user.SaveUserUseCase
 import com.example.chatapp.domain.usecase.user.SaveUserUseCaseImpl
-import com.example.chatapp.presentation.auth.signin.SignInViewModel
-import com.example.chatapp.presentation.auth.signup.SignUpViewModel
+import com.example.chatapp.presentation.signin.SignInViewModel
+import com.example.chatapp.presentation.signup.SignUpViewModel
 import com.example.chatapp.presentation.home.HomeViewModel
 import com.example.chatapp.presentation.main.MainViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -49,7 +49,7 @@ class ApplicationModules {
     )
 
     private fun Module.factoryInfra() {
-        factory<ResourceProvider> {
+        single<ResourceProvider> {
             ResourceProviderImpl(
                 context = get()
             )
@@ -93,13 +93,15 @@ class ApplicationModules {
         }
         viewModel {
             SignUpViewModel(
+                resourceProvider = get(),
                 signUpUseCase = get(),
                 saveUserUseCase = get(),
-                signUpBusiness = get()
+                signUpBusiness = get(),
             )
         }
         viewModel {
             SignInViewModel(
+                resourceProvider = get(),
                 signInUseCase = get(),
                 saveUserUseCase = get(),
                 signInBusiness = get()
@@ -115,10 +117,10 @@ class ApplicationModules {
     }
 
     private fun Module.factoryBusiness() {
-        factory<SignInBusiness> {
+        single<SignInBusiness> {
             SignInBusinessImpl()
         }
-        factory<SignUpBusiness> {
+        single<SignUpBusiness> {
             SignUpBusinessImpl()
         }
     }
@@ -139,17 +141,17 @@ class ApplicationModules {
                 repository = get()
             )
         }
-        factory<SignInUseCase> {
+        single<SignInUseCase> {
             SignInUseCaseImpl(
                 repository = get()
             )
         }
-        factory<SignUpUseCase> {
+        single<SignUpUseCase> {
             SignUpUseCaseImpl(
                 firebaseRepository = get(),
             )
         }
-        factory<SignOutUseCase> {
+        single<SignOutUseCase> {
             SignOutUseCaseImpl(
                 repository = get()
             )

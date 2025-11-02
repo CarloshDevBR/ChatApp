@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Spacing -->
-    <dimen name="spacing_reset">0dp</dimen>
     <dimen name="spacing_nano">4dp</dimen>
     <dimen name="spacing_small">8dp</dimen>
     <dimen name="spacing_small_s">12dp</dimen>

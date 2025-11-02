@@ -10,8 +10,8 @@ import com.example.chatapp.core.resourceprovider.ResourceProvider
 import com.example.chatapp.domain.usecase.user.GetUserUseCase
 import com.example.chatapp.domain.usecase.user.LogoutUserUseCase
 import kotlinx.coroutines.launch
-import com.example.chatapp.presentation.home.HomeEvent as Event
-import com.example.chatapp.presentation.home.HomeState as State
+import com.example.chatapp.presentation.home.state.HomeEvent as Event
+import com.example.chatapp.presentation.home.state.HomeState as State
 
 class HomeViewModel(
     private val resourceProvider: ResourceProvider,
@@ -35,6 +35,10 @@ class HomeViewModel(
                     _event.value = Event.LoggedOut
                 }
         }
+    }
+
+    fun navigateToProfile() {
+        _event.value = Event.NavigateToProfile
     }
 
     fun logout() {

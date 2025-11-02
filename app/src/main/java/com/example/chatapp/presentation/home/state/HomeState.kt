@@ -1,4 +1,4 @@
-package com.example.chatapp.presentation.home
+package com.example.chatapp.presentation.home.state
 
 import com.example.chatapp.data.model.response.UserResponse
 

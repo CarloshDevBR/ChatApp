@@ -1,4 +1,4 @@
-package com.example.chatapp.presentation.auth.signup
+package com.example.chatapp.presentation.signup.state
 
 sealed interface SignUpState {
     data object InitialState : SignUpState

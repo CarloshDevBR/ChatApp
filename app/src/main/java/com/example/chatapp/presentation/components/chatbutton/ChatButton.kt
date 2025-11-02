@@ -3,7 +3,6 @@ package com.example.chatapp.presentation.components.chatbutton
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.example.chatapp.R
@@ -21,7 +20,7 @@ class ChatButton @JvmOverloads constructor(
         true
     )
     private lateinit var label: String
-    var isLoading: Boolean = false
+    private var isLoading: Boolean = false
         set(value) {
             field = value
             setupComponent()
@@ -40,16 +39,16 @@ class ChatButton @JvmOverloads constructor(
 
     private fun setupAttrs(attrs: AttributeSet) {
         context.withStyledAttributes(attrs, R.styleable.Button) {
-            label = getString(R.styleable.Button_label) ?: ""
+            label = getString(R.styleable.Button_label) ?: String()
             isLoading = getBoolean(R.styleable.Button_loading, false)
         }
     }
 
     private fun setupComponent() = with(binding) {
         txtBtnChat.text = label
-        txtBtnChat.visibility = if (isLoading) View.INVISIBLE else View.VISIBLE
+        txtBtnChat.visibility = if (isLoading) INVISIBLE else VISIBLE
 
-        progressbarBtnChat.visibility = if (isLoading.not()) View.INVISIBLE else View.VISIBLE
+        progressbarBtnChat.visibility = if (isLoading.not()) INVISIBLE else VISIBLE
 
         btnChat.background = if (isLoading) {
             ContextCompat.getDrawable(context, R.drawable.shape_rounded_background_filled_disabled)
@@ -57,13 +56,17 @@ class ChatButton @JvmOverloads constructor(
             ContextCompat.getDrawable(context, R.drawable.shape_rounded_background_filled)
         }
 
-        btnChat.isClickable = !isLoading
-        btnChat.isFocusable = !isLoading
+        btnChat.isClickable = isLoading.not()
+        btnChat.isFocusable = isLoading.not()
     }
 
     fun setOnClickListener(listener: () -> Unit) = with(binding) {
         btnChat.setOnClickListener {
             listener()
         }
+    }
+
+    fun setLoadingButton(value: Boolean) {
+        isLoading = value
     }
 }

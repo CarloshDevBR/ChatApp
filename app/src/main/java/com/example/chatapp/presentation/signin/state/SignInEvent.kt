@@ -1,4 +1,4 @@
-package com.example.chatapp.presentation.auth.signin
+package com.example.chatapp.presentation.signin.state
 
 sealed interface SignInEvent {
     data object Loading : SignInEvent
@@ -7,7 +7,7 @@ sealed interface SignInEvent {
     data object InvalidPassword : SignInEvent
     data object EmptyPassword : SignInEvent
     data object IsValidForm : SignInEvent
-    data class PasswordVisible(val visible: Boolean = false) : SignInEvent
+    data class PasswordIsVisible(val isVisible: Boolean = false) : SignInEvent
 
     data class SignInError(
         val error: String
