@@ -1,7 +1,6 @@
 package com.example.chatapp.presentation.home.state
 
-import com.example.chatapp.data.model.response.UserResponse
-
 sealed interface HomeState {
-    data class User(val data: UserResponse) : HomeState
+    data class Tabs(val tabs: Map<Int, String>) : HomeState
+    data object LoggedOut : HomeState
 }

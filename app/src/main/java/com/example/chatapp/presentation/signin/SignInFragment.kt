@@ -66,16 +66,13 @@ class SignInFragment : Fragment() {
                     getText(R.string.txt_invalid_email)
                 is SignInEvent.EmptyEmail -> inputEmail.error =
                     getText(R.string.txt_empty_email)
-
                 is SignInEvent.InvalidPassword ->
                     setPasswordError(ErrorInputPasswordEnum.INVALID_INPUT)
-
                 is SignInEvent.EmptyPassword -> setPasswordError(ErrorInputPasswordEnum.EMPTY_INPUT)
                 is SignInEvent.PasswordIsVisible -> inputPassword.togglePasswordVisibility(
                     layout = inputPasswordLayout,
                     isVisible = state.isVisible
                 )
-
                 is SignInEvent.IsValidForm -> isValidForm()
                 is SignInEvent.SignInError -> {
                     clearState()

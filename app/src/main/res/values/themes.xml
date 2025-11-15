@@ -8,5 +8,10 @@
         <item name="android:statusBarColor">@color/fourth_500</item>
     </style>
 
-    <style name="Theme.ChatApp" parent="Base.Theme.ChatApp" />
+    <style name="Theme.ChatApp.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_background</item>
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+        <item name="windowSplashScreenBackground">@color/primary_200</item>
+        <item name="postSplashScreenTheme">@style/Base.Theme.ChatApp</item>
+    </style>
 </resources>

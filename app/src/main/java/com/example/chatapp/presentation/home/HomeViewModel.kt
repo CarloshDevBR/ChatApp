@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.chatapp.R
 import com.example.chatapp.core.livedata.single.SingleLiveEvent
 import com.example.chatapp.core.resourceprovider.ResourceProvider
+import com.example.chatapp.data.model.response.UserResponse
 import com.example.chatapp.domain.usecase.user.GetUserUseCase
 import com.example.chatapp.domain.usecase.user.LogoutUserUseCase
 import kotlinx.coroutines.launch
@@ -24,15 +25,31 @@ class HomeViewModel(
     private val _event = SingleLiveEvent<Event>()
     val event: LiveData<Event> get() = _event
 
+    private val _user = MutableLiveData<UserResponse>()
+    val user: LiveData<UserResponse> get() = _user
+
+    init {
+        setupTabsScreen()
+    }
+
+    private fun setupTabsScreen() = with(resourceProvider) {
+        _state.value = State.Tabs(
+            tabs = mapOf(
+                POSITION_CONVERSATION to getString(R.string.tab_conversations),
+                POSITION_CONTACTS to getString(R.string.tab_contacts)
+            )
+        )
+    }
+
     fun getUser() {
         viewModelScope.launch {
             getUserUseCase.invoke()
                 .collect {
                     if (it != null) {
-                        _state.value = State.User(it)
+                        _user.value = it
                         return@collect
                     }
-                    _event.value = Event.LoggedOut
+                    _state.value = State.LoggedOut
                 }
         }
     }
@@ -45,11 +62,16 @@ class HomeViewModel(
         viewModelScope.launch {
             logoutUserUseCase.invoke()
                 .collect {
-                    _event.value = Event.LoggedOut
+                    _state.value = State.LoggedOut
                 }
         }
     }
 
     fun getWelcomeMessage(name: String) =
         resourceProvider.getString(R.string.txt_title_toolbar, name)
+
+    private companion object {
+        const val POSITION_CONVERSATION = 0
+        const val POSITION_CONTACTS = 1
+    }
 }

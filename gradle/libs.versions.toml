@@ -17,6 +17,7 @@ navigation = "2.8.5"
 koinVersion = "4.0.1"
 gsonVersion = "2.10.1"
 swipereVersion = "1.1.0"
+splashScreen = "1.0.1"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -26,6 +27,7 @@ google-services = { id = "com.google.gms.google-services", version.ref = "google
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "splashScreen" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }

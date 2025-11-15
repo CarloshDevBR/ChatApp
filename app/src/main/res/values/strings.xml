@@ -25,4 +25,6 @@
     // Home Screen
     <string name="item_title_profile">Perfil</string>
     <string name="item_title_logout">Sair</string>
+    <string name="tab_conversations">Conversas</string>
+    <string name="tab_contacts">Contatos</string>
 </resources>

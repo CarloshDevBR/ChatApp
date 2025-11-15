@@ -67,10 +67,8 @@ class SignUpFragment : Fragment() {
                     getText(R.string.txt_invalid_email)
                 is SignUpEvent.EmptyEmail -> inputEmail.error =
                     getText(R.string.txt_invalid_email)
-
                 is SignUpEvent.InvalidPassword ->
                     setPasswordError(ErrorInputPasswordEnum.INVALID_INPUT)
-
                 is SignUpEvent.EmptyPassword -> setPasswordError(ErrorInputPasswordEnum.EMPTY_INPUT)
                 is SignUpEvent.IsValidForm -> isValidForm()
                 is SignUpEvent.PasswordIsVisible -> inputPassword.togglePasswordVisibility(

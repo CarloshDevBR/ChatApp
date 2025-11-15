@@ -6,7 +6,7 @@
         android:icon="@drawable/ic_dots_vertical"
         android:iconTint="@color/white"
         android:title=""
-        app:showAsAction="always">
+        app:showAsAction="ifRoom">
         <menu>
             <item
                 android:id="@+id/profile"
